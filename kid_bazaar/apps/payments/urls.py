@@ -1,9 +1,9 @@
 from django.conf.urls import patterns, url
 
-from .views import pay, create
+from .views import sale, submerchant
 
 
 urlpatterns = patterns('',
-    url(r'^pay/', pay),
-    url(r'^create/', create),
+    url(r'^sale/(?P<item_id>\d+)', sale),
+    url(r'^submerchant/', submerchant),
 )

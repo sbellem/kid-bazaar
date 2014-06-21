@@ -48,7 +48,7 @@ AUTHENTICATION_BACKENDS = (
     'kid_bazaar.libs.passwordless_backend.PasswordlessAuthBackend',
 )
 
-AUTH_USER_MODEL = 'custom_user.EmailUser'
+AUTH_USER_MODEL = 'home.KBUser'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',

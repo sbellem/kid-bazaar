@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 from cloudinary.models import CloudinaryField
+from custom_user.models import AbstractEmailUser
 from django.conf import settings
 from django.db import models
 
@@ -28,3 +30,7 @@ class ItemRequest(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='items_sold')
     requesting_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='items_wanted')
     status = models.TextField(default='PENDING')  # can be PENDING/ACCEPTED/REJECTED
+
+
+class KBUser(AbstractEmailUser):
+    merchant_id = models.TextField(null=True, blank=True)

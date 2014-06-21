@@ -58,10 +58,10 @@ def _format_result_create_submerchant(result_create):
     return result_create.__dict__
 
 
-def do_sale(submerchant_id):
+def do_sale(submerchant_id, amount):
     result = braintree.Transaction.sale({
         "merchant_account_id": submerchant_id,
-        "amount": "1000.00",
+        "amount": amount,
         "credit_card": {
             "number": "4111111111111111",
             "expiration_month": "05",

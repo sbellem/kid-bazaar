@@ -1,20 +1,28 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+
+from kid_bazaar.apps.home.models import Item 
 
 from .payments import do_sale, create_submerchant
 
 
-def pay(request):
+def sale(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    # TODO: take merchant_id from Item
+    merchant_id = 666
+    ctx = {
+        'item': item
+    } 
+
     if request.method == 'GET':
-        return render(request, 'payments/pay.html')
+        return render(request, 'payments/pay.html', ctx)
 
-    sale_result = do_sale(request.POST.get('user_id'))
-    return render(request, 'payments/pay.html', {
-        'result': sale_result
-    })
+    sale_result = do_sale(merchant_id, item.price)
+    ctx['result'] = sale_result
+    return render(request, 'payments/pay.html', ctx)
 
 
-def create(request):
+def submerchant(request):
     if request.method == 'GET':
         return render(request, 'payments/create.html')
 
