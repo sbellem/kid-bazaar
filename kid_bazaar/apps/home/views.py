@@ -1,5 +1,6 @@
-from django.views.generic import TemplateView, RedirectView
 from django.contrib import messages
+from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView, RedirectView, View
 
 
 class MessageRedirectionMixin(RedirectView):
@@ -27,3 +28,33 @@ class MessageRedirectionMixin(RedirectView):
 
 class IndexView(TemplateView):
     template_name = 'home/index.html'
+
+
+class AddItemView(TemplateView):
+    template_name = 'home/index.html'
+
+
+class EditItemView(TemplateView):
+    template_name = 'home/index.html'
+
+
+class MyItemsView(TemplateView):
+    template_name = 'home/index.html'
+
+
+class SearchItemsView(TemplateView):
+    template_name = 'home/index.html'
+
+
+class ProfileView(TemplateView):
+    template_name = 'home/index.html'
+
+
+class LogoutView(MessageRedirectionMixin):
+    url = '/'
+    message = 'Successfully logged out.'
+    message_level = messages.INFO
+
+    def get(self, request, *args, **kwargs):
+        auth_views.logout(request)
+        return super(LogoutView, self).get(request, *args, **kwargs)
