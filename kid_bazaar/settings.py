@@ -36,7 +36,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'kid_bazaar.apps.payments'
+    'kid_bazaar.apps.payments',
+    'kid_bazaar.apps.home'
+
 )
 
 MIDDLEWARE_CLASSES = (
