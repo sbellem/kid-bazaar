@@ -1,5 +1,5 @@
 *.pyc
-kid_bazaar/staticfiles
+staticfiles
 
 # Eclipse
 .project
