@@ -36,6 +36,9 @@ class Item(models.Model):
 
     @property
     def is_paid(self):
+        if not self.price:
+            return False
+
         # we don't care about payment status for now..
         payments_list = get_payments_list(self.id)
         payments_amount = sum([p.amount for p in payments_list.items])
