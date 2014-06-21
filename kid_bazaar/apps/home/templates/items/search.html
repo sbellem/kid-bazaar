@@ -5,6 +5,12 @@
 {% block body %}
     <h1>My items</h1>
 
+    <form action="{% url 'search_items' %}" method="get">
+        <p>
+            Search: <input type="text" name="q"> <input type="submit" value="Search!">
+        </p>
+    </form>
+
     <table class="table">
         <thead>
             <tr>

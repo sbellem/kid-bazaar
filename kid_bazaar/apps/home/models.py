@@ -56,13 +56,19 @@ class Item(models.Model):
         payments_amount = sum([p.amount for p in payments_list.items])
         self._is_paid = decimal.Decimal(payments_amount) > self.price
         self.save()
+        
+        if self._is_paid:
+            for ir in self.itemrequest_set.filter(status='PENDING_PAYMENT'):
+                ir.status = 'ACCEPTED'
+                ir.save()
 
 
 class ItemRequest(models.Model):
     item = models.ForeignKey(Item)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='items_sold')
     requesting_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='items_wanted')
-    status = models.TextField(default='PENDING')  # can be PENDING/ACCEPTED/REJECTED
+    # can be PENDING_CONFIRMATION -> PENDING_PAYMENT (if price > 0) -> ACCEPTED 
+    status = models.TextField(default='PENDING_CONFIRMATION')  
 
 
 class KBUser(AbstractEmailUser):

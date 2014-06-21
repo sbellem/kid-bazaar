@@ -2,6 +2,7 @@
 from django.contrib import auth, messages
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse
+from django.db.models import Q
 from django.views.generic import TemplateView, RedirectView, ListView
 
 from kid_bazaar.apps.payments.payments import create_submerchant
@@ -54,12 +55,29 @@ class SearchItemsView(ListView):
     template_name = 'items/search.html'
     model = models.Item
 
-    def get_queryset(self):
+    @property
+    def _base_qs(self):
+        base_qs = models.Item.objects
+        # exclude paid (by anyone) items
+        base_qs = base_qs.exclude(_is_paid=True)
+        # exclude owned (by this user) items        
         my_kid = self.request.user.kid_set.first()
-        search_items = models.Item.objects.exclude(_is_paid=True)
         if my_kid:
-            search_items = search_items.exclude(owner=my_kid)
-        return search_items
+            base_qs = base_qs.exclude(owner=my_kid)
+        # exclude booked (by anyone) items
+        not_free_items_ids = models.ItemRequest.objects.exclude(status="PENDING_CONFIRMATION").values('id',)   
+        base_qs = base_qs.exclude(id__in=not_free_items_ids)
+        return base_qs
+
+    def get_queryset(self):
+        search_qs = self._base_qs
+        
+        q = self.request.GET.get('q')
+        if q:
+            search_qs = search_qs.filter(Q(name__icontains=q) | Q(category__icontains=q))
+         
+        return search_qs
+
 
 class ProfileView(TemplateView):
     template_name = 'home/index.html'
