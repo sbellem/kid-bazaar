@@ -97,7 +97,7 @@
                         <li class="{{ my_items_class }}"><a href="{{ my_items_url }}">My items</a></li>
                         <li class="{{ search_items_class }}"><a href="{{ search_items_url }}">Search items</a></li>
                         <li class="{{ profile_class }}"><a href="{{ profile_url }}">Profile</a></li>
-                        <li><a href="{{ logout_url }}">Logout</a></li>
+                        <li><a href="{{ logout_url }}">Logout {{ user.email }}</a></li>
                     {% endif %}
                 </ul>
             </div>
