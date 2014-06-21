@@ -107,6 +107,11 @@ class SearchItemsView(ListView):
     template_name = 'items/search.html'
     model = models.Item
 
+    def get_context_data(self, **kwargs):
+        context = super(SearchItemsView, self).get_context_data(**kwargs)
+        context.update({'q': self.request.GET.get('q', '')})
+        return context
+
     @property
     def _base_qs(self):
         base_qs = models.Item.objects
