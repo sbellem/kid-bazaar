@@ -17,7 +17,7 @@ class ItemForm(forms.ModelForm):
     age_to = forms.IntegerField(min_value=0, required=False, label=u'Using from age of (months)')
 
 
-class KidForm(forms.Form):
+class KidForm(forms.ModelForm):
     class Meta:
         model = models.Kid
         fields = ('name', 'birthday', 'sex')

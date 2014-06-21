@@ -64,7 +64,7 @@ class AddItemView(MessageRedirectionMixin):
 
 class EditItemView(TemplateView):
     template_name = 'home/add_item.html'
-    message = u'Item has been added'
+    message = u'Item has been changed'
     message_level = messages.SUCCESS
 
     @property
@@ -73,7 +73,6 @@ class EditItemView(TemplateView):
 
     def get(self, request, item_id, *args, **kwargs):
         item = get_object_or_404(models.Item, id=item_id)
-        #import ipdb; ipdb.set_trace()
         form = forms.ItemForm(instance=item)
         return render(request, self.template_name, {'form': form})
 
@@ -85,7 +84,7 @@ class EditItemView(TemplateView):
         data = dict(form.clean(), owner = request.user.kid_set.first())
         data['age_from'] = (data['age_from'] or 0) + (data.pop('age_from_years') or 0) * 12
         data['age_to'] = (data['age_to'] or 0) + (data.pop('age_to_years') or 0) * 12
-        item.update(data) # = models.Item.objects.create(**data)
+        item.update(data)
         return super(EditItemView, self).get(request, *args, **kwargs)
 
 
@@ -169,7 +168,27 @@ class AddKidView(MessageRedirectionMixin):
 
 
 class EditKidView(MessageRedirectionMixin):
-    pass
+    template_name = 'home/add_kid.html'
+    message = u'Kid has been changed'
+    message_level = messages.SUCCESS
+
+    @property
+    def url(self):
+        return reverse('my_items')
+
+    def get(self, request, item_id, *args, **kwargs):
+        kid = get_object_or_404(models.Kid, id=item_id)
+        form = forms.KidForm(instance=kid)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, item_id, *args, **kwargs):
+        kid = get_object_or_404(models.Kid, id=item_id)
+        form = forms.KidForm(data=request.POST)
+        if not form.is_valid():
+            render(request, self.template_name, {'form': form})
+        data = dict(form.clean(), parent = request.user)
+        kid.update(data)
+        return super(EditItemView, self).get(request, *args, **kwargs)
 
 
 class LogoutView(MessageRedirectionMixin):
