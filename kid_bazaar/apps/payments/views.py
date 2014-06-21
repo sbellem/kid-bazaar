@@ -1,18 +1,14 @@
 import braintree
+from django.conf import settings
 from django.shortcuts import render
-
-
-BRAINTREE_MERCHANT_ID = '9tr9c2z2g3brts8d'
-BRAINTREE_PUBLIC_KEY = '42shpdp9smzw6z4w'
-BRAINTREE_PRIVATE_KEY = '2472860acb14f14150a7f523bd489895'
 
 
 def test_pay():
     braintree.Configuration.configure(
         braintree.Environment.Sandbox,
-        BRAINTREE_MERCHANT_ID,
-        BRAINTREE_PUBLIC_KEY,
-        BRAINTREE_PRIVATE_KEY
+        settings.BRAINTREE_MERCHANT_ID,
+        settings.BRAINTREE_PUBLIC_KEY,
+        settings.BRAINTREE_PRIVATE_KEY
     )
     result = braintree.Transaction.sale({
         "amount": "1000.00",
