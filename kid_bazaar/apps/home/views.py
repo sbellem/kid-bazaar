@@ -219,3 +219,55 @@ class RegisterView(MessageRedirectionMixin):
         else:
             message = u'Welcome back {}!'.format(user.email)
         return super(RegisterView, self).get(request, *args, message=message)
+
+
+from django.core.mail import send_mail
+
+
+class BookingRequestView(MessageRedirectionMixin):
+    message_level = messages.SUCCESS
+    message = 'Check your email to confirm your booking request'
+
+    @property
+    def url(self):
+        return reverse("search_items")
+
+    def post(self, request, item_id, *args, **kwargs):
+        item = get_object_or_404(Item, id=item_id)
+        user = request.user
+        item_owner_parent = item.owner.parent
+        item_request = models.ItemRequest.objects.create(
+            item=item,
+            owner=item_owner_parent,
+            requesting_user=user)
+        confirmation_url = reverse(
+            'confirm_booking', kwargs={'item_id': item_id})
+
+        send_mail(
+            '[KID BAZAAR] Booking confirmation request',
+            'Please click the link {} to accept the booking for item {}'.format(confirmation_url, item.name),
+            'noreply@kidbazaar.eu',
+            [item_owner_parent.email],
+            fail_silently=False)
+
+        return super(BookingRequestView, self).get(request, *args)
+
+
+class ConfirmBookingView(MessageRedirectionMixin):
+    message_level = messages.SUCCESS
+    message = 'Your booking request has been confirmed'
+
+    @property
+    def url(self):
+        return reverse("search_items")
+
+    def post(self, request, item_id, *args, **kwargs):
+        item = get_object_or_404(Item, id=item_id)
+        email = request.user.email
+        
+        if item.price > 0:
+            status = 'PENDING_PAYMENT'
+        else:
+            status = 'ACCEPTED'
+
+        return super(BookingRequestView, self).get(request, *args)
