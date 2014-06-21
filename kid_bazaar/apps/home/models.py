@@ -37,7 +37,7 @@ class Item(models.Model):
     used_till = models.DateField(blank=True)  # automatically calculated, when item is passed
     price = models.DecimalField(null=True, decimal_places=2, max_digits=7)
 
-#     _is_paid = models.BooleanField(default=False)
+    _is_paid = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'{} of {}'.format(self.name, self.owner.parent)
