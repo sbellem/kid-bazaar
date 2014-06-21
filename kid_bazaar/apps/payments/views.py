@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 
 from kid_bazaar.apps.home.models import Item 
 
-from .payments import do_sale, create_submerchant
+from .payments import do_sale
 
 
 def sale(request, item_id):
@@ -19,13 +19,4 @@ def sale(request, item_id):
     ctx['result'] = sale_result
     return render(request, 'payments/pay.html', ctx)
 
-
-def submerchant(request):
-    if request.method == 'GET':
-        return render(request, 'payments/create.html')
-
-    create_result = create_submerchant(request.POST.get('user_id'))
-    return render(request, 'payments/create.html', {
-        'result': create_result
-    })
     

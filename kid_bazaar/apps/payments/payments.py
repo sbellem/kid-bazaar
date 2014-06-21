@@ -14,8 +14,9 @@ braintree.Configuration.configure(
 
 
 def create_submerchant_from_email(email):
-    result = create_submerchant(email.replace('@', '____').replace('.', '_'))
-    print result
+    email_formatted = email.replace('@', '____').replace('.', '_')
+    create_submerchant(email_formatted)
+    return email_formatted
 
     
 def create_submerchant(submerchant_id):

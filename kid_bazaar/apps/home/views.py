@@ -69,8 +69,10 @@ class RegisterView(MessageRedirectionMixin):
     def post(self, request, *args, **kwargs):
         email = request.POST.get('email')
         user, created = auth.get_user_model().objects.get_or_create(email=email)
-        if not created:
-            create_submerchant_from_email(email)
+        if created:
+            user.merchant_id = create_submerchant_from_email(email)
+            user.save()
+
         user = auth.authenticate(email=email)
         auth.login(request, user)
         if created:

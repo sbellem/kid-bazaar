@@ -12,6 +12,9 @@ class Kid(models.Model):
     pic = CloudinaryField('image')
     sex = models.TextField(blank=True)
 
+    def __unicode__(self):
+        return u'{} of {}'.format(self.name, self.parent)
+
 
 class Item(models.Model):
     owner = models.ForeignKey(Kid)
@@ -24,6 +27,9 @@ class Item(models.Model):
     used_till = models.DateField()  # automatically calculated, when item is passed
     price = models.DecimalField(null=True, decimal_places=2, max_digits=7)
 
+    def __unicode__(self):
+        return u'{} of {}'.format(self.name, self.owner.parent)
+
 
 class ItemRequest(models.Model):
     item = models.ForeignKey(Item)
@@ -34,3 +40,6 @@ class ItemRequest(models.Model):
 
 class KBUser(AbstractEmailUser):
     merchant_id = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return u'{} [merchant_id={}]'.format(self.email, self.merchant_id)
