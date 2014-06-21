@@ -2,9 +2,11 @@
 from django.contrib import auth, messages
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView, RedirectView
+from django.views.generic import TemplateView, RedirectView, ListView
 
 from kid_bazaar.apps.payments.payments import create_submerchant
+
+from . import models
 
 
 class MessageRedirectionMixin(RedirectView):
@@ -37,8 +39,13 @@ class EditItemView(TemplateView):
     template_name = 'home/index.html'
 
 
-class MyItemsView(TemplateView):
-    template_name = 'home/index.html'
+class MyItemsView(ListView):
+    template_name = 'items/mine.html'
+    model = models.Item
+
+    def get_queryset(self):
+        my_items = self.request.user.kid_set.first().item_set.all()
+        return my_items
 
 
 class SearchItemsView(TemplateView):

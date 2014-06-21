@@ -686,3 +686,8 @@ html, body {
 .message-box {
     margin-top: 10px;
 }
+
+#bodywrap {
+    margin-top: -50px;
+    padding-top: 120px;
+}

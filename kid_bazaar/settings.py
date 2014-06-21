@@ -39,6 +39,7 @@ INSTALLED_APPS = (
 
     'custom_user',
     'south',
+    'cloudinary',
 
     'kid_bazaar.apps.payments',
     'kid_bazaar.apps.home',

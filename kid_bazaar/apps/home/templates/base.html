@@ -1,4 +1,4 @@
-{% load static core_tags %}
+{% load static core_tags cloudinary %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +7,7 @@
     <meta name="description" content="SHIELD - Free Bootstrap 3 Theme">
     <meta name="author" content="Carlos Alvarez - Alvarez.is - blacktie.co">
 
-    <title>{% block title %}{% endblock %}Kid Bazaar - don't spend a fortune on your kid</title>
+    <title>{% block title %}{% endblock %}Kids Bazaar - don't spend a fortune on your kid</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
@@ -107,10 +107,17 @@
 </div>
 
 <div class="body-container">
+{% block body_wrapper %}
+    <div id="bodywrap">
+        <div class="container">
     {% block body %}
 
-    {% endblock %}
-</div>
+
+    {% endblock body %}
+        </div>
+    </div>
+{% endblock body_wrapper %}
+
 
 
 <div id="footerwrap">
@@ -128,5 +135,7 @@
 <script type="text/javascript" src="{% static 'js/retina.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/jquery.easing.1.3.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/smoothscroll.js' %}"></script>
+{% cloudinary_includes %}
+{% cloudinary_js_config %}
 </body>
 </html>

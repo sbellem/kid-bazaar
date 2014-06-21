@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import decimal
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 from cloudinary.models import CloudinaryField
 from custom_user.models import AbstractEmailUser
@@ -15,6 +17,10 @@ class Kid(models.Model):
     birthday = models.DateField(blank=True)
     pic = CloudinaryField('image')
     sex = models.TextField(blank=True)
+
+    def age(self):
+        age = relativedelta(date.today(), self.birthday)
+        return 12 * age.years + age.months
 
     def __unicode__(self):
         return u'{} of {}'.format(self.name, self.parent)

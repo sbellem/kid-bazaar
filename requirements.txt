@@ -8,6 +8,7 @@ static==0.4
 wsgiref==0.1.2
 
 # KidBazaar
+python-dateutil
 braintree
 South==0.8.4
 django-custom-user==0.4

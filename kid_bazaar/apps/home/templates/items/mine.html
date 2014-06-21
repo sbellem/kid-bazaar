@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load item_tags cloudinary %}
+{% block title %}My items - {% endblock %}
+
+{% block body %}
+    <h1>My items</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Kid</th>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for item in object_list %}
+        <tr class="{% kiditemactive item %}">
+            <td class="kid-timeline">
+                <span class="timeline"/>
+            </td>
+            <td>
+                <img src="{% cloudinary_url item.pic width=100 height=100 crop="fill" %}" class="thumbnail" />
+            </td>
+            <td>
+                {{ item.name }}
+            </td>
+            <td>
+                {{ item.category }}
+            </td>
+            <td>
+                {{ item.age_from|age_text }} - {{ item.age_to|age_text }}
+            </td>
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+{% endblock body %}
