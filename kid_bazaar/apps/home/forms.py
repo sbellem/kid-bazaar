@@ -1,7 +1,12 @@
 from django import forms
 
+from . import models
 
-class ItemForm(forms.Form):
+
+class ItemForm(forms.ModelForm):
+    class Meta:
+        model = models.Item
+        fields = ('name', 'description', 'category', 'price', 'age_from_years', 'age_from', 'age_to_years', 'age_to')
     name = forms.CharField(max_length=100)
     description = forms.CharField(required=False, widget=forms.Textarea)
     category = forms.CharField(max_length=100, required=False)

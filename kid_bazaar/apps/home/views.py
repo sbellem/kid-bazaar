@@ -57,7 +57,7 @@ class AddItemView(MessageRedirectionMixin):
 
 
 class EditItemView(TemplateView):
-    template_name = 'home/edit_item.html'
+    template_name = 'home/add_item.html'
     message = u'Item has been added'
     message_level = messages.SUCCESS
 
@@ -67,8 +67,8 @@ class EditItemView(TemplateView):
 
     def get(self, request, item_id, *args, **kwargs):
         item = get_object_or_404(models.Item, id=item_id)
-        import ipdb; ipdb.set_trace()
-        form = forms.ItemForm(item)
+        #import ipdb; ipdb.set_trace()
+        form = forms.ItemForm(instance=item)
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, item_id, *args, **kwargs):
