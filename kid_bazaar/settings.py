@@ -36,10 +36,15 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'kid_bazaar.apps.payments',
-    'kid_bazaar.apps.home'
 
+    'custom_user',
+    'south',
+
+    'kid_bazaar.apps.payments',
+    'kid_bazaar.apps.home',
 )
+
+AUTH_USER_MODEL = 'custom_user.EmailUser'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
