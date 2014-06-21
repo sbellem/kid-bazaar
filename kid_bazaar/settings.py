@@ -148,3 +148,5 @@ EMAIL_HOST_USER = 'app26556402@heroku.com'
 EMAIL_HOST_PASSWORD = 'gf0dr6zq'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+HOST = os.environ.get('HOST', 'https://kid-bazaar.herokuapp.com')

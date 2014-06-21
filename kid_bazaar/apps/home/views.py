@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from django.conf import settings
 from django.contrib import auth, messages
 from django.contrib.auth import views as auth_views
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage, send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect
@@ -74,7 +75,6 @@ class EditItemView(TemplateView):
 
     def get(self, request, item_id, *args, **kwargs):
         item = get_object_or_404(models.Item, id=item_id, owner=request.user.kid_set.first())
-        #import ipdb; ipdb.set_trace()
         form = forms.ItemForm(instance=item)
         return render(request, self.template_name, {'form': form})
 
@@ -225,7 +225,7 @@ class RegisterView(MessageRedirectionMixin):
 
 class BookingRequestView(MessageRedirectionMixin):
     message_level = messages.SUCCESS
-    message = 'Check your email to confirm your booking request'
+    message = 'Owner has received an email with your booking request'
 
     @property
     def url(self):
@@ -236,34 +236,24 @@ class BookingRequestView(MessageRedirectionMixin):
         item = get_object_or_404(models.Item, id=item_id)
         user = request.user
         item_owner_parent = item.owner.parent
-        item_request = models.ItemRequest.objects.create(
-            item=item,
-            owner=item_owner_parent,
-            requesting_user=user)
-        # TODO make the url a hyperlink, using html template
-        confirmation_url = reverse(
-            'confirm_booking', kwargs={'item_request_id': item_request.id})
-        body = 'Please click the link {} to accept the booking for item {}'
-        send_mail(
+        item_request = models.ItemRequest.objects.create(item=item, owner=item_owner_parent, requesting_user=user)
+        confirmation_url = reverse('confirm_booking', kwargs={'item_request_id': item_request.id})
+        body = 'Please click the <a href="{}{}">link</a> to accept the booking from {} for item {}'
+        msg = EmailMessage(
             '[KID BAZAAR] Booking confirmation request',
-            body.format(confirmation_url, item.name),
+            body.format(settings.HOST, confirmation_url, user.email, item.name),
             'noreply@kidbazaar.eu',
-            [item_owner_parent.email],
-            fail_silently=False)
-
+            [item_owner_parent.email]
+        )
+        msg.content_subtype = "html"
+        msg.send(fail_silently=False)
         return super(BookingRequestView, self).get(request, *args)
 
 
 class ConfirmBookingView(MessageRedirectionMixin):
     message_level = messages.SUCCESS
-    message = 'Your booking request has been confirmed'
+    message = 'The booking request has been confirmed'
 
-    @property
-    def url(self):
-        return reverse("search_items")
-
-    # TODO change to PUT or POST
-    # TODO control object permission for owner only
     def get(self, request, item_request_id, *args, **kwargs):
         item_request = get_object_or_404(models.ItemRequest, id=item_request_id)
         item = item_request.item
@@ -278,7 +268,7 @@ class ConfirmBookingView(MessageRedirectionMixin):
             '[KID BAZAAR] Booking confirmation accepted',
             body.format(item.name),
             'noreply@kidbazaar.eu',
-            [item_request.requested_user.email],
-            fail_silently=False)
-
-        return super(ConfirmBookingView, self).get(request, *args)
+            [item_request.requesting_user.email],
+            fail_silently=False
+        )
+        return HttpResponseRedirect('home')
