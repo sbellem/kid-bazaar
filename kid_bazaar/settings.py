@@ -45,6 +45,7 @@ INSTALLED_APPS = (
 )
 
 AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
     'kid_bazaar.libs.passwordless_backend.PasswordlessAuthBackend',
 )
 
