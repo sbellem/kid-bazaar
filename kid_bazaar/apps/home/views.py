@@ -3,6 +3,7 @@ from django.contrib import auth, messages
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView, RedirectView, ListView
 
@@ -30,6 +31,11 @@ class MessageRedirectionMixin(RedirectView):
 
 class IndexView(TemplateView):
     template_name = 'home/index.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.user and request.user.is_authenticated():
+            return HttpResponseRedirect(reverse('my_items'))
+        return super(IndexView, self).get(request, *args, **kwargs)
 
 
 class AddItemView(MessageRedirectionMixin):
@@ -138,7 +144,6 @@ class SearchItemsView(ListView):
             search_qs = search_qs.filter(Q(name__icontains=q) | Q(category__icontains=q))
 
         return search_qs.order_by('age_from',)
-
 
 
 class ProfileView(TemplateView):
