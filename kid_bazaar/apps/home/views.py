@@ -57,8 +57,11 @@ class LogoutView(MessageRedirectionMixin):
 
 
 class RegisterView(MessageRedirectionMixin):
-    url = reverse('my_list')
     message_level = messages.SUCCESS
+
+    @property
+    def url(self):
+        return reverse('my_items')
 
     def post(self, request, *args, **kwargs):
         email = request.POST.get('email')
