@@ -1,0 +1,6 @@
+*.pyc
+kid_bazaar/staticfiles
+
+# Eclipse
+.project
+.pydevproject
