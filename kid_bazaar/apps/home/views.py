@@ -44,19 +44,22 @@ class MyItemsView(ListView):
     model = models.Item
 
     def get_queryset(self):
-        my_items = self.request.user.kid_set.first().item_set.all()
-        return my_items
+        my_kid = self.request.user.kid_set.first()
+        if my_kid:
+            return self.request.user.kid_set.first().item_set.all()
+        return []
 
 
-class SearchItemsView(TemplateView):
+class SearchItemsView(ListView):
     template_name = 'items/search.html'
     model = models.Item
 
     def get_queryset(self):
         my_kid = self.request.user.kid_set.first()
-        not_my_items = models.Item.objects.exclude(owner=my_kid)
-        return not_my_items
-
+        search_items = models.Item.objects.exclude(_is_paid=True)
+        if my_kid:
+            search_items = search_items.exclude(owner=my_kid)
+        return search_items
 
 class ProfileView(TemplateView):
     template_name = 'home/index.html'

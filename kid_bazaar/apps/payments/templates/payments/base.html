@@ -1,0 +1,141 @@
+{% load static core_tags cloudinary %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SHIELD - Free Bootstrap 3 Theme">
+    <meta name="author" content="Carlos Alvarez - Alvarez.is - blacktie.co">
+
+    <title>{% block title %}{% endblock %}Kids Bazaar - don't spend a fortune on your kid</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link href="{% static 'css/animate-custom.css' %}" rel="stylesheet">
+
+
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet'
+          type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/modernizr.custom.js' %}"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{% static 'js/html5shiv.js"></script>
+    <![endif]-->
+
+    <script src="{% static 'js/custom.js' %}"></script>
+
+
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body data-spy="scroll" data-offset="0" data-target="#navbar-main">
+
+
+<div id="navbar-main">
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        {% if messages %}
+            <div class="container message-box">
+                {% for message in messages %}
+                    <div class="row alert alert-dismissable
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.DEBUG %}
+                            alert-info
+                        {% elif message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                            alert-info
+                        {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                            alert-success
+                        {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                            alert-warning
+                        {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                            alert-danger
+                        {% else %}
+                            alert-info
+                        {% endif %}">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <a class="navbar-brand" href="/"><img src="{% static 'img/kidbazaar_logo_3.png' %}" class="navbar-logo"></a>
+
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigations</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+
+            {% url 'new_item' as new_item_url %}
+            {% navactive request 'new_item' as new_item_class %}
+            {% navactive request 'edit_item' as edit_item_class %}
+            {% url 'my_items' as my_items_url %}
+            {% navactive request 'my_items' as my_items_class %}
+            {% url 'search_items' as search_items_url %}
+            {% navactive request 'search_items' as search_items_class %}
+            {% url 'profile' as profile_url %}
+            {% navactive request 'profile' as profile_class %}
+            {% url 'logout' as logout_url %}
+
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="{{ new_item_class }}"><a href="{{ new_item_url }}">Add item</a></li>
+                        <li class="{{ my_items_class }}"><a href="{{ my_items_url }}">My items</a></li>
+                        <li class="{{ search_items_class }}"><a href="{{ search_items_url }}">Search items</a></li>
+                        <li class="{{ profile_class }}"><a href="{{ profile_url }}">Profile</a></li>
+                        <li><a href="{{ logout_url }}">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+
+<div class="body-container">
+{% block body_wrapper %}
+    <div id="bodywrap">
+        <div class="container">
+    {% block body %}
+
+
+    {% endblock body %}
+        </div>
+    </div>
+{% endblock body_wrapper %}
+
+
+
+<div id="footerwrap">
+    <div class="container">
+        <h4>Created by <a href="https://kid-bazaar.herokuapp.com">KidsBazaar</a> - Copyright 2014</h4>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+
+<script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/retina.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/smoothscroll.js' %}"></script>
+{% cloudinary_includes %}
+{% cloudinary_js_config %}
+</body>
+</html>

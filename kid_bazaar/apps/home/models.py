@@ -46,16 +46,18 @@ class Item(models.Model):
     def is_paid(self):
         if not self.price:
             return False
-
         # _is_paid holds a "cached" status if item has been paid in order to avoid always querying braintree's API
         if not self._is_paid:
-            # we don't care about payment status for now..
-            payments_list = get_payments_list(self.id)
-            payments_amount = sum([p.amount for p in payments_list.items])
-            self._is_paid = decimal.Decimal(payments_amount) > self.price
+            self.update_is_paid()
         return self._is_paid
-        
-        
+
+    def update_is_paid(self):
+        # we don't care about payment status for now and we check all payments made...
+        payments_list = get_payments_list(self.id)
+        payments_amount = sum([p.amount for p in payments_list.items])
+        self._is_paid = decimal.Decimal(payments_amount) > self.price
+        self.save()
+
 
 class ItemRequest(models.Model):
     item = models.ForeignKey(Item)
