@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.contrib import auth, messages
 from django.contrib.auth import views as auth_views
+from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect
@@ -221,9 +222,6 @@ class RegisterView(MessageRedirectionMixin):
         return super(RegisterView, self).get(request, *args, message=message)
 
 
-from django.core.mail import send_mail
-
-
 class BookingRequestView(MessageRedirectionMixin):
     message_level = messages.SUCCESS
     message = 'Check your email to confirm your booking request'
@@ -232,20 +230,22 @@ class BookingRequestView(MessageRedirectionMixin):
     def url(self):
         return reverse("search_items")
 
-    def post(self, request, item_id, *args, **kwargs):
-        item = get_object_or_404(Item, id=item_id)
+    # TODO change to POST
+    def get(self, request, item_id, *args, **kwargs):
+        item = get_object_or_404(models.Item, id=item_id)
         user = request.user
         item_owner_parent = item.owner.parent
         item_request = models.ItemRequest.objects.create(
             item=item,
             owner=item_owner_parent,
             requesting_user=user)
+        # TODO make the url a hyperlink, using html template
         confirmation_url = reverse(
-            'confirm_booking', kwargs={'item_id': item_id})
-
+            'confirm_booking', kwargs={'item_request_id': item_request.id})
+        body = 'Please click the link {} to accept the booking for item {}'
         send_mail(
             '[KID BAZAAR] Booking confirmation request',
-            'Please click the link {} to accept the booking for item {}'.format(confirmation_url, item.name),
+            body.format(confirmation_url, item.name),
             'noreply@kidbazaar.eu',
             [item_owner_parent.email],
             fail_silently=False)
@@ -261,13 +261,23 @@ class ConfirmBookingView(MessageRedirectionMixin):
     def url(self):
         return reverse("search_items")
 
-    def post(self, request, item_id, *args, **kwargs):
-        item = get_object_or_404(Item, id=item_id)
-        email = request.user.email
-        
+    # TODO change to PUT or POST
+    # TODO control object permission for owner only
+    def get(self, request, item_request_id, *args, **kwargs):
+        item_request = get_object_or_404(models.ItemRequest, id=item_request_id)
+        item = item_request.item
         if item.price > 0:
-            status = 'PENDING_PAYMENT'
+            item_request.status = 'PENDING_PAYMENT'
         else:
-            status = 'ACCEPTED'
+            item_request.status = 'ACCEPTED'
+        item_request.save()
 
-        return super(BookingRequestView, self).get(request, *args)
+        body = 'Your booking request for item {} has been accepted!'
+        send_mail(
+            '[KID BAZAAR] Booking confirmation accepted',
+            body.format(item.name),
+            'noreply@kidbazaar.eu',
+            [item_request.requested_user.email],
+            fail_silently=False)
+
+        return super(ConfirmBookingView, self).get(request, *args)
