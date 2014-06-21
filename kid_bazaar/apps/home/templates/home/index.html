@@ -8,6 +8,7 @@
 
     <div class="col-xs-offset-2 col-xs-8 col-sm-6 col-sm-offset-3" style="position: absolute; bottom: 30%; background-color: rgba(255, 255, 255, 0.5);">
         <form method="post" action="/register" style="margin: 40px 0;" class="form-inline">
+            {% csrf_token %}
             <input type="text" id="email" name="email" placeholder="Email">
             <button class="btn btn-primary" type="submit">Login / Register</button>
         </form>
