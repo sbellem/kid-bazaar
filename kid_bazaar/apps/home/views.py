@@ -110,25 +110,29 @@ class SearchItemsView(ListView):
     @property
     def _base_qs(self):
         base_qs = models.Item.objects
-        # exclude paid (by anyone) items
-        base_qs = base_qs.exclude(_is_paid=True)
-        # exclude owned (by this user) items        
-        my_kid = self.request.user.kid_set.first()
-        if my_kid:
-            base_qs = base_qs.exclude(owner=my_kid)
+
         # exclude booked (by anyone) items
         not_free_items_ids = models.ItemRequest.objects.exclude(status="PENDING_CONFIRMATION").values('id',)   
         base_qs = base_qs.exclude(id__in=not_free_items_ids)
+
+        my_kid = self.request.user.kid_set.first()
+        if my_kid:
+            # exclude owned (by this user) items        
+            base_qs = base_qs.exclude(owner=my_kid)
+
+            # exclude stuff for younger kids (than this user's)
+            base_qs = base_qs.filter(age_to__gte=my_kid.age())
+
         return base_qs
 
     def get_queryset(self):
         search_qs = self._base_qs
-        
+
         q = self.request.GET.get('q')
         if q:
             search_qs = search_qs.filter(Q(name__icontains=q) | Q(category__icontains=q))
-         
-        return search_qs
+
+        return search_qs.order_by('age_from',)
 
 
 
@@ -166,5 +170,5 @@ class RegisterView(MessageRedirectionMixin):
         if created:
             message = u'Thank you for registering!'
         else:
-            message = u'Welcome back!'
+            message = u'Welcome back {}!'.format(user.email)
         return super(RegisterView, self).get(request, *args, message=message)
