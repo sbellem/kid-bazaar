@@ -13,14 +13,9 @@ braintree.Configuration.configure(
 )
 
 
-def create_submerchant_from_email(email):
-    email_formatted = email.replace('@', '____').replace('.', '_')
-    create_submerchant(email_formatted)
-    return email_formatted
-
-    
-def create_submerchant(submerchant_id):
-    result = braintree.MerchantAccount.create({
+def create_submerchant(email):
+    submerchant_id = email.replace('@', '____').replace('.', '_')
+    braintree.MerchantAccount.create({
         'individual': {
             'first_name': braintree_test.Approve,
             'last_name': "Doe",
@@ -57,25 +52,25 @@ def create_submerchant(submerchant_id):
         "master_merchant_account_id": settings.BRAINTREE_MERCHANT_ACCOUNT_ID,
         "id": submerchant_id
     })
-    return _format_result_create_submerchant(result)
+    return submerchant_id
+    
 
-
-def _format_result_create_submerchant(result_create):
-    return result_create.__dict__
-
-
-def do_sale(submerchant_id, amount):
-    result = braintree.Transaction.sale({
+def do_sale(submerchant_id, cc_number, cc_expires_month, cc_expires_year, item_id, item_price):
+    result_sale = braintree.Transaction.sale({
         "merchant_account_id": submerchant_id,
-        "amount": amount,
+        "order_id": item_id,                                                                                       
+        "amount": item_price,
         "credit_card": {
-            "number": "4111111111111111",
-            "expiration_month": "05",
-            "expiration_year": "2020"
+            "number": cc_number,
+            "expiration_month": cc_expires_month,
+            "expiration_year": cc_expires_year
         },
-        "service_fee_amount": "1.00"                                         
+        "service_fee_amount": "1.00",
+        "options": {
+            "submit_for_settlement": True
+        },
     })
-    return _format_result_sale(result)
+    return _format_result_sale(result_sale)
 
 
 def _format_result_sale(result_sale):
@@ -94,3 +89,9 @@ def _format_result_sale(result_sale):
             result_sale_details += "\n  code: " + error.code
             result_sale_details += "\n  message: " + error.message
     return result_sale_details
+
+
+def get_payments_list(order_id):
+    return braintree.Transaction.search(
+        braintree.TransactionSearch.order_id == order_id
+    )

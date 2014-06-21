@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+import decimal
+
 from cloudinary.models import CloudinaryField
 from custom_user.models import AbstractEmailUser
 from django.conf import settings
 from django.db import models
+
+from kid_bazaar.apps.payments.payments import get_payments_list
 
 
 class Kid(models.Model):
@@ -29,6 +33,13 @@ class Item(models.Model):
 
     def __unicode__(self):
         return u'{} of {}'.format(self.name, self.owner.parent)
+
+    @property
+    def is_paid(self):
+        # we don't care about payment status for now..
+        payments_list = get_payments_list(self.id)
+        payments_amount = sum([p.amount for p in payments_list.items])
+        return decimal.Decimal(payments_amount) > self.price
 
 
 class ItemRequest(models.Model):

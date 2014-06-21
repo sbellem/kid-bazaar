@@ -14,9 +14,13 @@ def sale(request, item_id):
 
     if request.method == 'GET':
         return render(request, 'payments/pay.html', ctx)
-
-    sale_result = do_sale(item.owner.parent.merchant_id, item.price)
-    ctx['result'] = sale_result
+    ctx['result'] = do_sale(
+        item.owner.parent.merchant_id, 
+        request.POST.get('cc_number'),
+        request.POST.get('cc_expires_month'),
+        request.POST.get('cc_expires_year'),
+        item.id,
+        item.price
+    )
     return render(request, 'payments/pay.html', ctx)
-
     

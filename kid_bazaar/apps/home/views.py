@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView, RedirectView
 
-from kid_bazaar.apps.payments.payments import create_submerchant_from_email
+from kid_bazaar.apps.payments.payments import create_submerchant
 
 
 class MessageRedirectionMixin(RedirectView):
@@ -70,7 +70,8 @@ class RegisterView(MessageRedirectionMixin):
         email = request.POST.get('email')
         user, created = auth.get_user_model().objects.get_or_create(email=email)
         if created:
-            user.merchant_id = create_submerchant_from_email(email)
+            # we don't care about creation status web-hooks for now...
+            user.merchant_id = create_submerchant(email)
             user.save()
 
         user = auth.authenticate(email=email)

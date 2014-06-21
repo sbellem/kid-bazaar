@@ -5,6 +5,9 @@
 
 <form action="." method="post">
     {% csrf_token %}
+    Card Number: <input type="text" name="cc_number" value="4111111111111111"> <br />
+    Card Expires At Month: <input type="text" name="cc_expires_month" value="05"> <br />
+    Card Expires At Year: <input type="text" name="cc_expires_year" value="2020"> <br />
     <input type="submit" value="Pay!">
 </form> 
 
