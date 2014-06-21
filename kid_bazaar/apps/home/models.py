@@ -6,7 +6,7 @@ from django.db import models
 
 
 class Kid(models.Model):
-    parent = models.IntegerField(settings.AUTH_USER_MODEL)
+    parent = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.TextField(blank=True)
     birthday = models.DateField(blank=True)
     pic = CloudinaryField('image')

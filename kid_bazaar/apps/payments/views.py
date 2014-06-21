@@ -8,8 +8,6 @@ from .payments import do_sale, create_submerchant
 
 def sale(request, item_id):
     item = get_object_or_404(Item, id=item_id)
-    # TODO: take merchant_id from Item
-    merchant_id = 666
     ctx = {
         'item': item
     } 
@@ -17,7 +15,7 @@ def sale(request, item_id):
     if request.method == 'GET':
         return render(request, 'payments/pay.html', ctx)
 
-    sale_result = do_sale(merchant_id, item.price)
+    sale_result = do_sale(item.owner.parent.merchant_id, item.price)
     ctx['result'] = sale_result
     return render(request, 'payments/pay.html', ctx)
 

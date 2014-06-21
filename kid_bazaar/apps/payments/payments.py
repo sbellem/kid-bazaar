@@ -13,6 +13,11 @@ braintree.Configuration.configure(
 )
 
 
+def create_submerchant_from_email(email):
+    result = create_submerchant(email.replace('@', '____').replace('.', '_'))
+    print result
+
+    
 def create_submerchant(submerchant_id):
     result = braintree.MerchantAccount.create({
         'individual': {

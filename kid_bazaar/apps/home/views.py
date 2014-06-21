@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 from django.contrib import auth, messages
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse
-from django.views.generic import TemplateView, RedirectView, View
+from django.views.generic import TemplateView, RedirectView
+
+from kid_bazaar.apps.payments.payments import create_submerchant_from_email
 
 
 class MessageRedirectionMixin(RedirectView):
@@ -66,6 +69,8 @@ class RegisterView(MessageRedirectionMixin):
     def post(self, request, *args, **kwargs):
         email = request.POST.get('email')
         user, created = auth.get_user_model().objects.get_or_create(email=email)
+        if not created:
+            create_submerchant_from_email(email)
         user = auth.authenticate(email=email)
         auth.login(request, user)
         if created:
