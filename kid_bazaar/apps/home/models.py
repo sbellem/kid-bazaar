@@ -15,7 +15,7 @@ class Kid(models.Model):
     parent = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.TextField(blank=True)
     birthday = models.DateField(blank=True)
-    pic = CloudinaryField('image')
+    pic = CloudinaryField('image', blank=True, null=True)
     sex = models.TextField(blank=True)
 
     def age(self):
@@ -28,13 +28,13 @@ class Kid(models.Model):
 
 class Item(models.Model):
     owner = models.ForeignKey(Kid)
-    pic = CloudinaryField('image')
+    pic = CloudinaryField('image', blank=True, null=True)
     name = models.TextField()
     description = models.TextField(blank=True)
     category = models.TextField(blank=True)
     age_from = models.IntegerField()  # in months
     age_to = models.IntegerField()  # in months
-    used_till = models.DateField()  # automatically calculated, when item is passed
+    used_till = models.DateField(blank=True)  # automatically calculated, when item is passed
     price = models.DecimalField(null=True, decimal_places=2, max_digits=7)
 
     def __unicode__(self):
