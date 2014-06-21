@@ -8,7 +8,7 @@
     <table class="table " id="mine_items">
         <thead>
             <tr>
-                <th>{{ my_kid.name }} ({{ my_kid.age|age_text }})</th>
+                <th>{% if my_kid %} {{ my_kid.name }} ({{ my_kid.age|age_text }}) {% endif %}</th>
                 <th>Picture</th>
                 <th>Name</th>
                 <th>Category</th>
