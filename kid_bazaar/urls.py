@@ -3,10 +3,9 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'kid_bazaar.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+    url(r'^payments/', include('kid_bazaar.apps.payments.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
 )
