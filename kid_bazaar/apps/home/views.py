@@ -78,14 +78,11 @@ class EditItemView(TemplateView):
 
     def post(self, request, item_id, *args, **kwargs):
         item = get_object_or_404(models.Item, id=item_id, owner=request.user.kid_set().first())
-        form = forms.ItemForm(data=request.POST)
+        form = forms.ItemForm(data=request.POST, instance=item)
         if not form.is_valid():
-            render(request, self.template_name, {'form': form})
-        data = dict(form.clean(), owner = request.user.kid_set.first())
-        data['age_from'] = (data['age_from'] or 0) + (data.pop('age_from_years') or 0) * 12
-        data['age_to'] = (data['age_to'] or 0) + (data.pop('age_to_years') or 0) * 12
-        item.update(data)
-        return super(EditItemView, self).get(request, *args, **kwargs)
+            return render(request, self.template_name, {'form': form})
+        form.save()
+        return HttpResponseRedirect(reverse('my_items'))
 
 
 class MyItemsView(ListView):
@@ -183,12 +180,11 @@ class EditKidView(MessageRedirectionMixin):
 
     def post(self, request, item_id, *args, **kwargs):
         kid = get_object_or_404(models.Kid, id=item_id)
-        form = forms.KidForm(data=request.POST)
+        form = forms.KidForm(data=request.POST, instance=kid)
         if not form.is_valid():
-            render(request, self.template_name, {'form': form})
-        data = dict(form.clean(), parent = request.user)
-        kid.update(data)
-        return super(EditItemView, self).get(request, *args, **kwargs)
+            return render(request, self.template_name, {'form': form})
+        form.save()
+        return HttpResponseRedirect(reverse('my_items'))
 
 
 class LogoutView(MessageRedirectionMixin):
