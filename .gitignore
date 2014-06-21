@@ -4,6 +4,7 @@ staticfiles
 # Eclipse
 .project
 .pydevproject
+.settings
 
 # PyCharm
 .idea/

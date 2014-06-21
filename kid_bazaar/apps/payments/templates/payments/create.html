@@ -1,4 +1,11 @@
 <h1>##-- CREATE SUB-MERCHANT --##</h1>
+
+<form action="." method="post">
+    {% csrf_token %}
+    Create sub-merchant (pass user.id): <input type="text" name="user_id">
+    <input type="submit" value="Submit">
+</form> 
+
 <p>
     {{ result }}
 </p>

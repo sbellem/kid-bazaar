@@ -1,4 +1,11 @@
 <h1>##-- PAY --##</h1>
+
+<form action="." method="post">
+    {% csrf_token %}
+    Pay to (pass user.id): <input type="text" name="user_id">
+    <input type="submit" value="Submit">
+</form> 
+
 <p>
     {{ result }}
 </p>
