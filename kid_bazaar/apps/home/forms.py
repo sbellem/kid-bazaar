@@ -18,6 +18,9 @@ class ItemForm(forms.ModelForm):
 
 
 class KidForm(forms.Form):
+    class Meta:
+        model = models.Kid
+        fields = ('name', 'birthday', 'sex')
     name = forms.CharField(max_length=100, required=False)
     birthday = forms.DateField()
     sex = forms.CharField(required=False)

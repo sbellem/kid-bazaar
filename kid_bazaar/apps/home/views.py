@@ -146,8 +146,30 @@ class SearchItemsView(ListView):
         return search_qs.order_by('age_from',)
 
 
-class ProfileView(TemplateView):
-    template_name = 'home/index.html'
+class AddKidView(MessageRedirectionMixin):
+    template_name = 'home/add_kid.html'
+    message = u'Kid has been added'
+    message_level = messages.SUCCESS
+
+    @property
+    def url(self):
+        return reverse('my_items')
+
+    def get(self, request, *args, **kwargs):
+        form = forms.KidForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = forms.KidForm(data=request.POST)
+        if not form.is_valid():
+            render(request, self.template_name, {'form': form})
+        data = dict(form.clean(), parent = request.user)
+        models.Kid.objects.create(**data)
+        return super(AddKidView, self).get(request, *args, **kwargs)
+
+
+class EditKidView(MessageRedirectionMixin):
+    pass
 
 
 class LogoutView(MessageRedirectionMixin):

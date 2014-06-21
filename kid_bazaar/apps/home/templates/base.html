@@ -79,15 +79,20 @@
                 </button>
             </div>
 
+            {% url 'my_items' as my_items_url %}
+            {% navactive request 'my_items' as my_items_class %}
+
             {% url 'new_item' as new_item_url %}
             {% navactive request 'new_item' as new_item_class %}
             {% navactive request 'edit_item' as edit_item_class %}
-            {% url 'my_items' as my_items_url %}
-            {% navactive request 'my_items' as my_items_class %}
+
             {% url 'search_items' as search_items_url %}
             {% navactive request 'search_items' as search_items_class %}
-            {% url 'profile' as profile_url %}
-            {% navactive request 'profile' as profile_class %}
+
+            {% url 'new_kid' as new_kid_url %}
+            {% navactive request 'new_kid' as new_kid_class %}
+            {% navactive request 'edit_kid' as edit_kid_class %}
+
             {% url 'logout' as logout_url %}
 
             <div class="navbar-collapse collapse">
@@ -96,7 +101,7 @@
                         <li class="{{ my_items_class }}"><a href="{{ my_items_url }}">My items</a></li>
                         <li class="{{ new_item_class }}"><a href="{{ new_item_url }}">Add item</a></li>
                         <li class="{{ search_items_class }}"><a href="{{ search_items_url }}">Search items</a></li>
-                        <li class="{{ profile_class }}"><a href="{{ profile_url }}">Profile</a></li>
+                        <li class="{{ new_kid_class }}"><a href="{{ new_kid_url }}">Add Kid</a></li>
                         <li><a href="{{ logout_url }}">Logout {{ user.email }}</a></li>
                     {% endif %}
                 </ul>
