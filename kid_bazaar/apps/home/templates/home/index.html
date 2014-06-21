@@ -1,68 +1,7 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SHIELD - Free Bootstrap 3 Theme">
-    <meta name="author" content="Carlos Alvarez - Alvarez.is - blacktie.co">
+{% extends "base.html" %}
 
-    <title>Kid Bazaar - don't spend a fortune on your kid</title>
+{% block body %}
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="{% static 'css/main.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
-    <link href="{% static 'css/animate-custom.css' %}" rel="stylesheet">
-
-
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic' rel='stylesheet'
-          type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,700' rel='stylesheet' type='text/css'>
-
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/modernizr.custom.js' %}"></script>
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="{% static 'js/html5shiv.js"></script>
-    <![endif]-->
-</head>
-
-<body data-spy="scroll" data-offset="0" data-target="#navbar-main">
-
-
-<div id="navbar-main">
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <a class="navbar-brand" href="/"><img src="{% static 'img/kidbazaar_logo_3.png' %}" class="navbar-logo"></a>
-
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigations</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">My stuff</a></li>
-                    <li><a href="#services">Get new stuff</a></li>
-                    <li><a href="#team">Profile</a></li>
-                </ul>
-            </div>
-            <!--/.nav-collapse -->
-        </div>
-    </div>
-</div>
-
-
-<!-- ==== HEADERWRAP ==== -->
 <div id="headerwrap" style="position: relative;">
     <header class="clearfix">
         <p>Don't spend a fortune on your kid. Share your spendings.</p>
@@ -74,25 +13,6 @@
             <button class="btn btn-primary" type="submit">Login / Register</button>
         </form>
     </div>
-
-</div>
-<!-- /headerwrap -->
-
-<div id="footerwrap">
-    <div class="container">
-        <h4>Created by <a href="http://KidsBazaar.eu">KidsBazaar.eu</a> - Copyright 2014</h4>
-    </div>
 </div>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-
-
-<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/retina.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/jquery.easing.1.3.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/smoothscroll.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/jquery-func.js' %}"></script>
-</body>
-</html>
+{% endblock body %}
