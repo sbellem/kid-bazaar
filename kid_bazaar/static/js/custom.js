@@ -13,8 +13,6 @@
             }
             $bodyContainer.css('padding-top', newPaddingTop.toString() + 'px');
         }
-      $parent.detach().trigger('closed.bs.alert').remove()
-      //$parent.trigger('closed.bs.alert').remove()
         fix_heights();
         $('.navbar .alert').bind('closed.bs.alert', fix_heights);
     });
