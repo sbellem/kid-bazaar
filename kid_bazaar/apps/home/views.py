@@ -1,5 +1,6 @@
-from django.contrib import messages
+from django.contrib import auth, messages
 from django.contrib.auth import views as auth_views
+from django.core.urlresolvers import reverse
 from django.views.generic import TemplateView, RedirectView, View
 
 
@@ -10,20 +11,15 @@ class MessageRedirectionMixin(RedirectView):
     message_level = messages.INFO
 
     def get(self, request, *args, **kwargs):
-        msg = self.message
+        msg = kwargs.get('message') or self.message
+        msg_level = kwargs.get('message_level') or self.message_level
         if msg is None:
             raise Exception("Message is not defined")
 
         msg = msg.format(**self.message_context)
-        messages.add_message(request, self.message_level, msg)
+        messages.add_message(request, msg_level, msg)
 
         return super(MessageRedirectionMixin, self).get(request, *args, **kwargs)
-
-
-# class RegistrationCompleteView(MessageRedirectionMixin):
-#     url = '/'  # You can use pattern_name or get_redirect_url() instead see @RedirectView
-#     message = 'Message'
-#     message_level = messages.SUCCESS
 
 
 class IndexView(TemplateView):
@@ -58,3 +54,19 @@ class LogoutView(MessageRedirectionMixin):
     def get(self, request, *args, **kwargs):
         auth_views.logout(request)
         return super(LogoutView, self).get(request, *args, **kwargs)
+
+
+class RegisterView(MessageRedirectionMixin):
+    url = reverse('my_list')
+    message_level = messages.SUCCESS
+
+    def post(self, request, *args, **kwargs):
+        email = request.POST.get('email')
+        user, created = auth.get_user_model().objects.get_or_create(email=email)
+        user = auth.authenticate(email=email)
+        auth.login(request, user)
+        if created:
+            message = u'Thank you for registering!'
+        else:
+            message = u'Welcome back!'
+        return super(RegisterView, self).get(request, *args, message=message)

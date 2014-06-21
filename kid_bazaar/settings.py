@@ -44,6 +44,10 @@ INSTALLED_APPS = (
     'kid_bazaar.apps.home',
 )
 
+AUTHENTICATION_BACKENDS = (
+    'kid_bazaar.libs.passwordless_backend.PasswordlessAuthBackend',
+)
+
 AUTH_USER_MODEL = 'custom_user.EmailUser'
 
 MIDDLEWARE_CLASSES = (

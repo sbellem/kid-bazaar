@@ -12,5 +12,6 @@ urlpatterns = patterns(
     url(r'items/search', views.SearchItemsView.as_view(), name="search_items"),
     url(r'profile', views.ProfileView.as_view(), name="profile"),
     url(r'logout', views.LogoutView.as_view(), name="logout"),
+    url(r'register', views.RegisterView.as_view()),
     url(r'', views.IndexView.as_view()),
 )
