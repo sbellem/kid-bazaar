@@ -37,6 +37,8 @@ class Item(models.Model):
     used_till = models.DateField(blank=True)  # automatically calculated, when item is passed
     price = models.DecimalField(null=True, decimal_places=2, max_digits=7)
 
+#     _is_paid = models.BooleanField(default=False)
+
     def __unicode__(self):
         return u'{} of {}'.format(self.name, self.owner.parent)
 
@@ -45,11 +47,15 @@ class Item(models.Model):
         if not self.price:
             return False
 
-        # we don't care about payment status for now..
-        payments_list = get_payments_list(self.id)
-        payments_amount = sum([p.amount for p in payments_list.items])
-        return decimal.Decimal(payments_amount) > self.price
-
+        # _is_paid holds a "cached" status if item has been paid in order to avoid always querying braintree's API
+        if not self._is_paid:
+            # we don't care about payment status for now..
+            payments_list = get_payments_list(self.id)
+            payments_amount = sum([p.amount for p in payments_list.items])
+            self._is_paid = decimal.Decimal(payments_amount) > self.price
+        return self._is_paid
+        
+        
 
 class ItemRequest(models.Model):
     item = models.ForeignKey(Item)

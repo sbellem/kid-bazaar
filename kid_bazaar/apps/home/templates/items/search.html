@@ -13,7 +13,6 @@
                 <th>Name</th>
                 <th>Category</th>
                 <th>Age</th>
-                <th>Paid</th>
             </tr>
         </thead>
         <tbody>
@@ -35,7 +34,7 @@
                 {{ item.age_from|age_text }} - {{ item.age_to|age_text }}
             </td>
             <td>
-                {{ item.is_paid }}
+                <a href="/payments/{{ item.id }}/">get it!</a>
             </td>
         </tr>
     {% endfor %}

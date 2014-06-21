@@ -49,7 +49,13 @@ class MyItemsView(ListView):
 
 
 class SearchItemsView(TemplateView):
-    template_name = 'home/index.html'
+    template_name = 'items/search.html'
+    model = models.Item
+
+    def get_queryset(self):
+        my_kid = self.request.user.kid_set.first()
+        not_my_items = models.Item.objects.exclude(owner=my_kid)
+        return not_my_items
 
 
 class ProfileView(TemplateView):
