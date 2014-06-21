@@ -42,12 +42,21 @@ class EditItemView(TemplateView):
 
 class MyItemsView(ListView):
     template_name = 'items/mine.html'
-    model = models.Item
+    my_kid = None
+
+    def get_context_data(self, **kwargs):
+        context = super(MyItemsView, self).get_context_data(**kwargs)
+        context.update({'my_kid': self.my_kid})
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.my_kid = self.request.user.kid_set.first()
+        return super(MyItemsView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        my_kid = self.request.user.kid_set.first()
-        if my_kid:
-            return self.request.user.kid_set.first().item_set.all()
+        if self.my_kid:
+            items = self.my_kid.item_set.all()
+            return sorted(items, key=lambda i: (-i.is_active(), i.age_from))
         return []
 
 
@@ -77,6 +86,7 @@ class SearchItemsView(ListView):
             search_qs = search_qs.filter(Q(name__icontains=q) | Q(category__icontains=q))
          
         return search_qs
+
 
 
 class ProfileView(TemplateView):

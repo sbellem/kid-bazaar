@@ -22,16 +22,13 @@ register.filter('age_text', age_text)
 
 @tag(register, [Variable(), Optional([Constant("as"), Name()])])
 def kiditemactive(context, item, asvar=None):
-    kids_age = item.owner.age()
-    item_age_from = item.age_from
-    item_age_to = item.age_to
-
-    if kids_age < item_age_from:
+    is_item_active = item.is_active()
+    if is_item_active < 0:
         output = 'before'
-    elif kids_age < item_age_to:
-        output = 'now'
-    else:
+    elif is_item_active > 0:
         output = 'after'
+    else:
+        output = 'now'
 
     if asvar:
         context[asvar] = output

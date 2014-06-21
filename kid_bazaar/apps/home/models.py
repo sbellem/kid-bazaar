@@ -62,6 +62,18 @@ class Item(models.Model):
                 ir.status = 'ACCEPTED'
                 ir.save()
 
+    def is_active(self):
+        kids_age = self.owner.age()
+        item_age_from = self.age_from
+        item_age_to = self.age_to
+
+        if kids_age < item_age_from:
+            return -1
+        elif kids_age < item_age_to:
+            return 0
+        else:
+            return 1
+
 
 class ItemRequest(models.Model):
     item = models.ForeignKey(Item)

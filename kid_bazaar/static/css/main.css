@@ -691,3 +691,13 @@ html, body {
     margin-top: -50px;
     padding-top: 120px;
 }
+
+#mine_items .now .kid-timeline{
+    background: url('../img/timeline_active.png') repeat-y 50%;
+}
+#mine_items .before .kid-timeline{
+    background: url('../img/timeline_future.png') repeat-y 50%;
+}
+#mine_items .after .kid-timeline{
+    background: url('../img/timeline_past.png') repeat-y 50%;
+}

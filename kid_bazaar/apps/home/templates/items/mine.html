@@ -5,10 +5,10 @@
 {% block body %}
     <h1>My items</h1>
 
-    <table class="table">
+    <table class="table " id="mine_items">
         <thead>
             <tr>
-                <th>Kid</th>
+                <th>{{ my_kid.name }} ({{ my_kid.age|age_text }})</th>
                 <th>Picture</th>
                 <th>Name</th>
                 <th>Category</th>
@@ -20,7 +20,15 @@
     {% for item in object_list %}
         <tr class="{% kiditemactive item %}">
             <td class="kid-timeline">
-                <span class="timeline"/>
+                <!--
+                {% if item.is_active < 0 %}
+                    <div class="progress-bar progress-bar-default" style="width: 70%;"></div>
+                {% elif item.is_active > 0 %}
+                    <div class="progress-bar progress-bar-warning" style="width: 70%;"></div>
+                {% else %}
+                    <div class="progress-bar progress-bar-success" style="width: 70%;"></div>
+                {% endif %}
+                -->
             </td>
             <td>
                 <img src="{% cloudinary_url item.pic width=100 height=100 crop="fill" %}" class="thumbnail" />
