@@ -3,11 +3,11 @@ from django.contrib import auth, messages
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse
 from django.db.models import Q
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import TemplateView, RedirectView, ListView
 
 from kid_bazaar.apps.payments.payments import create_submerchant
-
-from . import models
+from . import forms, models
 
 
 class MessageRedirectionMixin(RedirectView):
@@ -32,12 +32,55 @@ class IndexView(TemplateView):
     template_name = 'home/index.html'
 
 
-class AddItemView(TemplateView):
-    template_name = 'home/index.html'
+class AddItemView(MessageRedirectionMixin):
+    template_name = 'home/add_item.html'
+    message = u'Item has been added'
+    message_level = messages.SUCCESS
+
+    @property
+    def url(self):
+        return reverse('my_items')
+
+    def get(self, request, *args, **kwargs):
+        form = forms.ItemForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = forms.ItemForm(data=request.POST)
+        if not form.is_valid():
+            render(request, self.template_name, {'form': form})
+        data = dict(form.clean(), owner = request.user.kid_set.first())
+        data['age_from'] = (data['age_from'] or 0) + (data.pop('age_from_years') or 0) * 12
+        data['age_to'] = (data['age_to'] or 0) + (data.pop('age_to_years') or 0) * 12
+        models.Item.objects.create(**data)
+        return super(AddItemView, self).get(request, *args, **kwargs)
 
 
 class EditItemView(TemplateView):
-    template_name = 'home/index.html'
+    template_name = 'home/edit_item.html'
+    message = u'Item has been added'
+    message_level = messages.SUCCESS
+
+    @property
+    def url(self):
+        return reverse('my_items')
+
+    def get(self, request, item_id, *args, **kwargs):
+        item = get_object_or_404(models.Item, id=item_id)
+        import ipdb; ipdb.set_trace()
+        form = forms.ItemForm(item)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, item_id, *args, **kwargs):
+        item = get_object_or_404(models.Item, id=item_id, owner=request.user.kid_set().first())
+        form = forms.ItemForm(data=request.POST)
+        if not form.is_valid():
+            render(request, self.template_name, {'form': form})
+        data = dict(form.clean(), owner = request.user.kid_set.first())
+        data['age_from'] = (data['age_from'] or 0) + (data.pop('age_from_years') or 0) * 12
+        data['age_to'] = (data['age_to'] or 0) + (data.pop('age_to_years') or 0) * 12
+        item.update(data) # = models.Item.objects.create(**data)
+        return super(EditItemView, self).get(request, *args, **kwargs)
 
 
 class MyItemsView(ListView):
