@@ -34,7 +34,6 @@ class Item(models.Model):
     category = models.TextField(blank=True)
     age_from = models.IntegerField()  # in months
     age_to = models.IntegerField()  # in months
-    used_till = models.DateField(blank=True)  # automatically calculated, when item is passed
     price = models.DecimalField(null=True, decimal_places=2, max_digits=7)
 
     _is_paid = models.BooleanField(default=False)
