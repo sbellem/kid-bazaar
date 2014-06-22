@@ -139,7 +139,7 @@ STATICFILES_DIRS = (
 
 # HACK for cloudcontrol (should work on Heroku as well)
 DATABASES['default'] = {
-    'ENGINE': 'django.db.backends.postgres',
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
     'NAME': 'dcm1tsh48g4ans',
     'USER': 'jkttmsephinuky',
     'PASSWORD': 'XDySxs8eJOXm3mtP4ClnYuuett',
