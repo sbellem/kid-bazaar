@@ -172,10 +172,13 @@ class SearchItemsView(ListView):
     @property
     def _base_qs(self):
         base_qs = models.Item.objects
+        #booked_items_ids = models.ItemRequest.objects.filter(
+        #    requesting_user=self.request.user).values_list('item', flat=True)
+        #base_qs = base_qs.exclude(id__in=booked_items_ids)
 
         # exclude booked or in process of booking (by anyone) items
         not_free_items_ids = models.ItemRequest.objects.exclude(
-            status__in=("PENDING_PAYMENT", "ACCEPTED")).values_list('id', flat=True)  
+            status__in=("PENDING_PAYMENT", "ACCEPTED")).values_list('item', flat=True)
         base_qs = base_qs.exclude(id__in=not_free_items_ids)
 
         my_kid = self.request.user.kid_set.first()
