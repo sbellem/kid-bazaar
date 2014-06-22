@@ -71,7 +71,7 @@ class Item(models.Model):
 
         if kids_age < item_age_from:
             return -1
-        elif kids_age < item_age_to:
+        elif kids_age <= item_age_to:
             return 0
         else:
             return 1

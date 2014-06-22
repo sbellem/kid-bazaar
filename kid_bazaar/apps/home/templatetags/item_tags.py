@@ -44,7 +44,6 @@ def item_status(context, item, user_viewing, asvar=None):
     """When viewing my-items"""
     owner_user = item.owner.parent
     output = ''
-
     itemrequest = item.get_oldest_status_itemrequest()
     if not itemrequest:
         pass
@@ -53,7 +52,7 @@ def item_status(context, item, user_viewing, asvar=None):
             output = '<span class="label">booked</span><br/> for&nbsp;{} <br/>' \
                      '<a href="{}" class="btn btn-default btn-sm" role="button">transfer</a>' \
                      ''.format(itemrequest.requesting_user.email,
-                               reverse('transfer_item', kwargs={'item_id': itemrequest.id}))
+                               reverse('transfer_item', kwargs={'item_id': item.id}))
         else:
             output = '<span class="label">booked</span><br/> from {}'.format(itemrequest.owner.email)
     elif itemrequest.status == 'PENDING_PAYMENT':

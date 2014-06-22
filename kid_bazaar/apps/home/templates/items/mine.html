@@ -5,6 +5,96 @@
 {% block body %}
     <h1>My items</h1>
 
+    <a href="{% url 'my_items' %}">
+        <span class="label
+            {% if active_filter == '' %}label-primary{% else %}label-info{% endif %}
+        ">
+            All
+            <span class="badge">{{ counts.all }}</span>
+        </span>
+    </a>
+    &nbsp;
+    <a href="{% url 'my_items' %}?filter=owned">
+        <span class="label
+            {% if active_filter == 'owned' %}label-primary{% else %}label-info{% endif %}
+        ">
+            Mine
+            <span class="badge">{{ counts.owned }}</span>
+        </span>
+    </a>
+    &nbsp;
+    <a href="{% url 'my_items' %}?filter=notowned">
+        <span class="label
+            {% if active_filter == 'notowned' %}label-primary{% else %}label-info{% endif %}
+        ">
+            <span class="badge ">{{ counts.notowned }}</span>
+            Not mine yet
+        </span>
+    </a>
+    &nbsp;
+    <a href="{% url 'my_items' %}?filter=after">
+        <span class="label
+            {% if active_filter == 'after' %}label-primary{% else %}label-info{% endif %}
+        ">
+            Not needed any more
+            <span class="badge ">{{ counts.after }}</span>
+        </span>
+    </a>
+    &nbsp;
+    <a href="{% url 'my_items' %}?filter=now">
+        <span class="label
+            {% if active_filter == 'now' %}label-primary{% else %}label-info{% endif %}
+        ">
+            Already using
+            <span class="badge ">{{ counts.now }}</span>
+        </span>
+    </a>
+    &nbsp;
+    <a href="{% url 'my_items' %}?filter=before">
+        <span class="label
+            {% if active_filter == 'before' %}label-primary{% else %}label-info{% endif %}
+        ">
+            Will be used
+            <span class="badge ">{{ counts.before }}</span>
+        </span>
+    </a>
+    <br/>
+    <a href="{% url 'my_items' %}?filter=booked">
+        <span class="label
+          {% if active_filter == 'booked' %}label-primary{% else %}label-info{% endif %}
+        ">
+            Booked
+            <span class="badge ">{{ counts.booked }}</span>
+        </span>
+    </a>
+    &nbsp;
+    <a href="{% url 'my_items' %}?filter=payment">
+        <span class="label
+            {% if active_filter == 'payment' %}label-primary{% else %}label-info{% endif %}
+        ">
+            Payment
+            <span class="badge ">{{ counts.payment }}</span>
+        </span>
+    </a>
+    &nbsp;
+    <a href="{% url 'my_items' %}?filter=requested">
+        <span class="label
+            {% if active_filter == 'requested' %}label-primary{% else %}label-info{% endif %}
+        ">
+            Requested
+            <span class="badge ">{{ counts.requested }}</span>
+        </span>
+    </a>
+    &nbsp;
+    <a href="{% url 'my_items' %}?filter=free">
+        <span class="label
+            {% if active_filter == 'free' %}label-primary{% else %}label-info{% endif %}
+        ">
+            Free
+            <span class="badge ">{{ counts.free }}</span>
+        </span>
+    </a>
+
     <table class="table table-fixed-header " id="mine_items">
         <thead>
             <tr>

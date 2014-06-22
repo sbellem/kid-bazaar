@@ -98,20 +98,35 @@ class DeleteItemView(MessageRedirectionMixin):
     def delete(self, request, item_id, *args, **kwargs):
         item = get_object_or_404(models.Item, id=item_id, owner=request.user.kid_set.first())
         item.delete()
-        return super(DeleteItemView, self).get(request, *args, message=message)
+        return super(DeleteItemView, self).get(request, *args, message=self.message)
 
 
 class MyItemsView(ListView):
     template_name = 'items/mine.html'
     my_kid = None
+    counts = None
+    active_filter = None
+
+    filters = {
+        'owned': lambda i, my_kid: i.owner.id == my_kid.id,
+        'notowned': lambda i, my_kid: i.owner.id != my_kid.id,
+        'after': lambda i, my_kid: i.is_active() < 0,
+        'now': lambda i, my_kid: i.is_active() == 0,
+        'before': lambda i, my_kid: i.is_active() > 0,
+        'booked': lambda i, my_kid: i.status() == 'ACCEPTED',
+        'payment': lambda i, my_kid: i.status() == 'PENDING_PAYMENT',
+        'requested': lambda i, my_kid: i.status() == 'PENDING_CONFIRMATION',
+        'free': lambda i, my_kid: i.status() == 'FREE'
+    }
 
     def get_context_data(self, **kwargs):
         context = super(MyItemsView, self).get_context_data(**kwargs)
-        context.update({'my_kid': self.my_kid})
+        context.update({'my_kid': self.my_kid, 'counts': self.counts, 'active_filter': self.active_filter})
         return context
 
     def get(self, request, *args, **kwargs):
         self.my_kid = self.request.user.kid_set.first()
+        self.active_filter = request.GET.get('filter', '')
         return super(MyItemsView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
@@ -121,7 +136,24 @@ class MyItemsView(ListView):
         if self.my_kid:
             item_ids.extend(models.Item.objects.filter(owner=self.my_kid).values_list('id', flat=True))
 
-        items = models.Item.objects.prefetch_related('itemrequest_set').filter(id__in=set(item_ids))
+        all_items = models.Item.objects.prefetch_related('itemrequest_set').filter(id__in=set(item_ids))
+
+        self.counts = {
+            'all': len(all_items),
+            'owned': len([i for i in all_items if self.filters['owned'](i, self.my_kid)]),
+            'notowned': len([i for i in all_items if self.filters['notowned'](i, self.my_kid)]),
+            'after': len([i for i in all_items if self.filters['after'](i, self.my_kid)]),
+            'now': len([i for i in all_items if self.filters['now'](i, self.my_kid)]),
+            'before': len([i for i in all_items if self.filters['before'](i, self.my_kid)]),
+            'booked': len([i for i in all_items if self.filters['booked'](i, self.my_kid)]),
+            'payment': len([i for i in all_items if self.filters['payment'](i, self.my_kid)]),
+            'requested': len([i for i in all_items if self.filters['requested'](i, self.my_kid)]),
+            'free': len([i for i in all_items if self.filters['free'](i, self.my_kid)]),
+        }
+        if self.active_filter:
+            items = [i for i in all_items if self.filters[self.active_filter](i, self.my_kid)]
+        else:
+            items = all_items
         return sorted(items, key=lambda i: (-i.is_active(), i.age_from))
 
 
@@ -307,10 +339,10 @@ class TransferView(MessageRedirectionMixin):
     def get(self, request, item_id, *args, **kwargs):
         if not request.user or not request.user.is_authenticated():
             return HttpResponseRedirect('/')
-
         item = get_object_or_404(models.Item, id=item_id, owner__parent=request.user)
         accepted = item.itemrequest_set.filter(status='ACCEPTED', owner=request.user)
         if accepted.exists():
+            #???
             item.owner = accepted[0].requesting_user.kid_set.first()
             for ir in item.itemrequest_set.all():
                 ir.delete()
