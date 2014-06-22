@@ -87,6 +87,20 @@ class EditItemView(TemplateView):
         return HttpResponseRedirect(reverse('my_items'))
 
 
+class DeleteItemView(MessageRedirectionMixin):
+    message = u'Item has been deleted'
+    message_level = messages.SUCCESS
+
+    @property
+    def url(self):
+        return reverse('my_items')
+
+    def delete(self, request, item_id, *args, **kwargs):
+        item = get_object_or_404(models.Item, id=item_id, owner=request.user.kid_set.first())
+        item.delete()
+        return super(DeleteItemView, self).get(request, *args, message=message)
+
+
 class MyItemsView(ListView):
     template_name = 'items/mine.html'
     my_kid = None
