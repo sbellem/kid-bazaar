@@ -12,6 +12,11 @@ CATEGORIES = (
     (u'Others', u'Others'),
     )
 
+SEX = (
+    (u'FEMALE', 'Girl'),
+    (u'MALE', 'Boy'),
+)
+
 
 class ItemForm(forms.ModelForm):
     class Meta:
@@ -35,5 +40,4 @@ class KidForm(forms.ModelForm):
     pic = CloudinaryFileField()
     name = forms.CharField(max_length=100, required=False)
     birthday = forms.DateField(widget=forms.DateInput)
-
-    sex = forms.CharField(required=False)
+    sex = forms.ChoiceField(required=False, choices=SEX)

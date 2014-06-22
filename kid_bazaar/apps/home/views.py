@@ -263,25 +263,30 @@ class LogoutView(MessageRedirectionMixin):
 class RegisterView(MessageRedirectionMixin):
     message_level = messages.SUCCESS
 
-    @property
-    def url(self):
-        return reverse('my_items')
+    url = None
 
     def post(self, request, *args, **kwargs):
         email = request.POST.get('email')
         user, created = auth.get_user_model().objects.get_or_create(email=email)
+        kid = None
         if created:
             # we don't care about creation status web-hooks for now...
             user.merchant_id = create_submerchant(email)
             user.save()
-            user.kid_set.create()
-        
+            kid = user.kid_set.create()
+
         user = auth.authenticate(email=email)
         auth.login(request, user)
         if created:
             message = u'Thank you for registering!'
         else:
             message = u'Welcome back {}!'.format(user.email)
+
+        if kid:
+            self.url = reverse('edit_kid', kwargs={'item_id': kid.id})
+        else:
+            self.url = reverse('my_items')
+
         return super(RegisterView, self).get(request, *args, message=message)
 
 
