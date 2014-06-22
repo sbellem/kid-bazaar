@@ -138,14 +138,14 @@ STATICFILES_DIRS = (
 ## CLOUDCONTROL SETTINGS ##
 
 # HACK for cloudcontrol (should work on Heroku as well)
-DATABASES['default'] = {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'dcm1tsh48g4ans',
-    'USER': 'jkttmsephinuky',
-    'PASSWORD': 'XDySxs8eJOXm3mtP4ClnYuuett',
-    'HOST': 'ec2-54-247-126-137.eu-west-1.compute.amazonaws.com',
-    'PORT': '5432'
-}
+# DATABASES['default'] = {
+#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     'NAME': 'dcm1tsh48g4ans',
+#     'USER': 'jkttmsephinuky',
+#     'PASSWORD': 'XDySxs8eJOXm3mtP4ClnYuuett',
+#     'HOST': 'ec2-54-247-126-137.eu-west-1.compute.amazonaws.com',
+#     'PORT': '5432'
+# }
 
 
 ## KID-BAZAAR SETINGS ##
