@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 from kid_bazaar.apps.home.models import Item 
@@ -24,5 +26,5 @@ def sale(request, item_id):
         item.price
     )
     item.update_is_paid()
-    return render(request, 'payments/pay.html', ctx)
+    return HttpResponseRedirect(reverse('my_items'))
     

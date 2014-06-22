@@ -14,5 +14,6 @@ urlpatterns = patterns('',
     url(r'register', views.RegisterView.as_view()),
     url(r'items/(?P<item_id>\d+)/bookit', views.BookingRequestView.as_view(), name='bookit'),
     url(r'item_request/(?P<item_request_id>\d+)/confirm_booking', views.ConfirmBookingView.as_view(), name='confirm_booking'),
+    url(r'transfer/(?P<item_id>\d+)', views.TransferView.as_view(), name='transfer_item'),
     url(r'', views.IndexView.as_view(), name='home'),
 )

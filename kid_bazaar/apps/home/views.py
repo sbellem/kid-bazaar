@@ -101,10 +101,15 @@ class MyItemsView(ListView):
         return super(MyItemsView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        if self.my_kid:
-            items = self.my_kid.item_set.all()
-            return sorted(items, key=lambda i: (-i.is_active(), i.age_from))
-        return []
+        item_ids = list(models.ItemRequest.objects.filter(
+            status__in=['PENDING_PAYMENT', 'ACCEPTED']).values_list('item__id', flat=True))
+
+        my_kid = self.request.user.kid_set.first()
+        if my_kid:
+            item_ids.extend(models.Item.objects.filter(owner=my_kid).values_list('id', flat=True))
+        
+        items = models.Item.objects.filter(id__in=set(item_ids))
+        return sorted(items, key=lambda i: (-i.is_active(), i.age_from))
 
 
 class SearchItemsView(ListView):
@@ -120,8 +125,9 @@ class SearchItemsView(ListView):
     def _base_qs(self):
         base_qs = models.Item.objects
 
-        # exclude booked (by anyone) items
-        not_free_items_ids = models.ItemRequest.objects.exclude(status="PENDING_CONFIRMATION").values('id',)   
+        # exclude booked or in process of booking (by anyone) items
+        not_free_items_ids = models.ItemRequest.objects.exclude(
+            status__in=("PENDING_PAYMENT", "ACCEPTED")).values_list('id', flat=True)  
         base_qs = base_qs.exclude(id__in=not_free_items_ids)
 
         my_kid = self.request.user.kid_set.first()
@@ -272,3 +278,23 @@ class ConfirmBookingView(MessageRedirectionMixin):
             fail_silently=False
         )
         return HttpResponseRedirect('home')
+
+
+class TransferView(MessageRedirectionMixin):
+    message_level = messages.SUCCESS
+    message = 'The booking request has been confirmed'
+
+    def get(self, request, item_id, *args, **kwargs):
+        if not request.user or not request.user.is_authenticated():
+            return HttpResponseRedirect('/')
+
+        item = get_object_or_404(models.Item, id=item_id, owner__parent=request.user)
+        accepted = item.itemrequest_set.filter(status='ACCEPTED', owner=request.user)
+        if accepted.exists():
+            item.owner = accepted[0].requesting_user.kid_set.first()
+            for ir in item.itemrequest_set.all():
+                ir.delete()
+            item.save()
+
+        return HttpResponseRedirect('/')
+

@@ -42,18 +42,21 @@ def kiditemactive(context, item, asvar=None):
 @register.simple_tag
 def item_status(item, user_viewing):
     """When viewing my-items"""
+    owner_user = item.owner.parent
+    
     accepted = item.itemrequest_set.filter(status='ACCEPTED')
     if accepted.exists():
-        if item.owner == user_viewing:
-            return 'booked for {} [<a href="TODO">transfer</a>]'.format(accepted[0].requesting_user.email)
+        if owner_user == user_viewing:
+            return 'booked for {} [<a href="{}">transfer</a>]'.format(accepted[0].requesting_user.email,
+                                                                      reverse('transfer_item', kwargs={'item_id': item.id}))
         else:
             return 'booked from {}'.format(accepted[0].owner.email)
     
     payment_pending = item.itemrequest_set.filter(status='PENDING_PAYMENT')
     if payment_pending.exists():
-        if item.owner == user_viewing :
+        if owner_user == user_viewing :
             return 'payment pending from {}'.format(payment_pending[0].requesting_user.email)
         else:
-            return 'booking confirmed [<a href="{}">pay</a>]'.format(reverse('do_sale', kwargs={'item_id': item.id}))
+            return 'booking confirmed [<a href="{}/">pay</a>]'.format(reverse('do_sale', kwargs={'item_id': item.id}))
 
     return ''
