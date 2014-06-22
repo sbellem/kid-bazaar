@@ -718,3 +718,10 @@ html, body {
 #mine_items .status-PENDING_CONFIRMATION .label {
     cursor: default;
 }
+#mine-items-filters .label {
+    margin: 2px;
+}
+#mine-items-filters .label .badge {
+    background-color: white;
+    color: #999;
+}

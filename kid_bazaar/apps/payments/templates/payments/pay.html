@@ -3,16 +3,43 @@
 {% block title %}Buy item{% endblock %}
 
 {% block body %}
-    <p>{{ item.name }}</p>
-    <p>{{ item.price }}</p>
-    
+    <h1>Payment form</h1>
+
+    <div class="col-xs-offset-2 col-xs-8 col-sm-6 col-sm-offset-3">
     <form action="." method="post">
         {% csrf_token %}
-        Card Number: <input type="text" name="cc_number" value="4111111111111111"> <br />
-        Card Expires At Month: <input type="text" name="cc_expires_month" value="05"> <br />
-        Card Expires At Year: <input type="text" name="cc_expires_year" value="2020"> <br />
-        <input type="submit" value="Pay!">
-    </form> 
+
+        <div class="form-group">
+            <label class="control-label">Item name</label>
+            <input class="form-control" name=""
+                   value="{{ item.name }}" title="" type="text" readonly="true">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="id_cc_number">Item price</label>
+            <input class="form-control" name=""
+                   value="{{ item.price }}" title="" type="text" readonly="true">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="id_cc_number">Card Number</label>
+            <input class="form-control" id="id_cc_number" name="cc_number"
+                   value="4111111111111111" title="" type="text">
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="id_cc_expires_month">Card Expires At Month</label>
+            <input class="form-control" id="id_cc_expires_month" name="cc_expires_month"
+                   value="05" title="" type="text">
+        </div>
+
+        <div class="form-group">
+            <label class="control-label" for="id_cc_expires_year">Card Expires At Year</label>
+            <input class="form-control" id="id_cc_expires_year"  name="cc_expires_year"
+                   value="2020" title="" type="text">
+        </div>
+
+        <button class="btn btn-primary" type="submit">Pay</button>
+    </form>
+    </div>
     
     <p>
         {{ result }}
