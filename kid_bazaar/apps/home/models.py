@@ -14,7 +14,7 @@ from kid_bazaar.apps.payments.payments import get_payments_list
 class Kid(models.Model):
     parent = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.TextField(blank=True)
-    birthday = models.DateField(blank=True)
+    birthday = models.DateField(blank=True, null=True)
     pic = CloudinaryField('image', blank=True, null=True)
     sex = models.TextField(blank=True)
 

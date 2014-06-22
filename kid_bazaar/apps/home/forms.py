@@ -20,7 +20,7 @@ class ItemForm(forms.ModelForm):
 class KidForm(forms.ModelForm):
     class Meta:
         model = models.Kid
-        fields = ('name', 'birthday', 'sex')
+        fields = ('name', 'pic', 'birthday', 'sex')
     name = forms.CharField(max_length=100, required=False)
     birthday = forms.DateField()
     sex = forms.CharField(required=False)

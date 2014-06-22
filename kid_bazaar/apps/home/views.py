@@ -274,7 +274,8 @@ class RegisterView(MessageRedirectionMixin):
             # we don't care about creation status web-hooks for now...
             user.merchant_id = create_submerchant(email)
             user.save()
-
+            user.kid_set.create()
+        
         user = auth.authenticate(email=email)
         auth.login(request, user)
         if created:
