@@ -1,3 +1,6 @@
+#CloudControl
+cctrl
+
 # Heroku
 Django==1.6.5
 dj-database-url==0.2.2
@@ -16,4 +19,3 @@ Pillow==2.4.0
 cloudinary==1.0.17
 django-bootstrap3==4.7.0
 django-templatetag-sugar==1.0
-

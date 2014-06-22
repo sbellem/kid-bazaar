@@ -112,7 +112,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-## HEROKU SETTINGS ##
+## HEROKU/CLOUDCONTROL SETTINGS ##
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
