@@ -95,3 +95,17 @@ def kidowned(context, kid, item, asvar=None):
         return ""
     else:
         return output
+
+
+@tag(register, [Variable(), Variable(), Optional([Constant("as"), Name()])])
+def item_has_been_requested(context, user, item, asvar=None):
+    if item.has_requested_item(user):
+        output = 'requested'
+    else:
+        output = ''
+
+    if asvar:
+        context[asvar] = output
+        return ""
+    else:
+        return output

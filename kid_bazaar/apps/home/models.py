@@ -113,6 +113,12 @@ class Item(models.Model):
     def get_itemrequests(self, status):
         return [i for i in self.itemrequest_set.all() if i.status == status]
 
+    def get_itemrequests_for_requesting_user(self, requesting_user):
+        return [i for i in self.itemrequest_set.all() if i.requesting_user == requesting_user]
+
+    def has_requested_item(self, user):
+        return self.itemrequest_set.filter(requesting_user=user).exists()
+
 
 class ItemRequest(models.Model):
     item = models.ForeignKey(Item)

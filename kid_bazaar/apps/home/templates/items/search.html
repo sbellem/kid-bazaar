@@ -26,6 +26,7 @@
         <tbody>
     {% for item in object_list %}
         <tr class="{% kiditemactive item %}">
+            {% item_has_been_requested request.user item as item_requested %}
             <td>
                 <img src="{% cloudinary_url item.pic width=100 height=100 crop="fill" %}" class="thumbnail" />
             </td>
@@ -45,7 +46,9 @@
                 {{ item.owner.parent.email }}
             </td>
             <td>
-                <a href="/items/{{ item.id }}/bookit/" class="btn btn-default btn-sm" role="button">book it!</a>
+		{% if item_requested != 'requested' %}
+                    <a href="/items/{{ item.id }}/bookit/" class="btn btn-default btn-sm" role="button">book it!</a>
+		{% endif %}
             </td>
         </tr>
     {% endfor %}
