@@ -43,7 +43,7 @@
                 {{ item.age_from|age_text }} - {{ item.age_to|age_text }}
             </td>
             <td>
-                TODO (e.g. booked from <email>, reserved for <email>, free, free from, free until)
+                {% item_status item user %}
             </td>
         </tr>
     {% endfor %}
