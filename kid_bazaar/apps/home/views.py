@@ -177,7 +177,7 @@ class SearchItemsView(ListView):
         #base_qs = base_qs.exclude(id__in=booked_items_ids)
 
         # exclude booked or in process of booking (by anyone) items
-        not_free_items_ids = models.ItemRequest.objects.exclude(
+        not_free_items_ids = models.ItemRequest.objects.filter(
             status__in=("PENDING_PAYMENT", "ACCEPTED")).values_list('item', flat=True)
         base_qs = base_qs.exclude(id__in=not_free_items_ids)
 
