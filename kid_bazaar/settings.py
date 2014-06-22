@@ -42,9 +42,11 @@ INSTALLED_APPS = (
     'custom_user',
     'south',
     'cloudinary',
+    'paypal.standard.ipn',
 
     'kid_bazaar.apps.payments',
     'kid_bazaar.apps.home',
+
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -134,6 +136,9 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+
+PAYPAL_RECEIVER_EMAIL = "mat.jankowski+sandbox@gmail.com"
+#PAYPAL_TEST = True
 
 ## KID-BAZAAR SETINGS ##
 

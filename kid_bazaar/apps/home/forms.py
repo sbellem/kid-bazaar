@@ -1,4 +1,5 @@
 from django import forms
+from cloudinary.forms import CloudinaryFileField
 
 from . import models
 
@@ -16,6 +17,7 @@ class ItemForm(forms.ModelForm):
     class Meta:
         model = models.Item
         fields = ('name', 'pic', 'description', 'category', 'price', 'age_from_years', 'age_from', 'age_to_years', 'age_to')
+    pic = CloudinaryFileField()
     name = forms.CharField(max_length=100)
     description = forms.CharField(required=False, widget=forms.Textarea)
     category = forms.ChoiceField(required=False, choices=CATEGORIES)
@@ -30,6 +32,7 @@ class KidForm(forms.ModelForm):
     class Meta:
         model = models.Kid
         fields = ('name', 'pic', 'birthday', 'sex')
+    pic = CloudinaryFileField()
     name = forms.CharField(max_length=100, required=False)
     birthday = forms.DateField(widget=forms.DateInput)
 

@@ -19,3 +19,4 @@ Pillow==2.4.0
 cloudinary==1.0.17
 django-bootstrap3==4.7.0
 django-templatetag-sugar==1.0
+git+http://git@github.com/spookylukey/django-paypal.git
