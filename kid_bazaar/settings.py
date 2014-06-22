@@ -135,6 +135,20 @@ STATICFILES_DIRS = (
 )
 
 
+## CLOUDCONTROL SETTINGS ##
+
+# fallback if Heroku settings failed
+if not DATABASES['default'].get('ENGINE'):
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgres',
+        'NAME': 'dcm1tsh48g4ans',
+        'USER': 'jkttmsephinuky',
+        'PASSWORD': 'XDySxs8eJOXm3mtP4ClnYuuett',
+        'HOST': 'ec2-54-247-126-137.eu-west-1.compute.amazonaws.com',
+        'PORT': '5432'
+    }
+
+
 ## KID-BAZAAR SETINGS ##
 
 BRAINTREE_MERCHANT_ACCOUNT_ID = 'rzm4w7q6cyjy97z3'
