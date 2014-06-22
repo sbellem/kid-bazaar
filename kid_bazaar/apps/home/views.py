@@ -150,6 +150,13 @@ class SearchItemsView(ListView):
         return search_qs.order_by('age_from',)
 
 
+class MyKidsView(ListView):
+    template_name = 'home/list_kids.html'
+
+    def get_queryset(self):
+        return self.request.user.kid_set.all()
+
+
 class AddKidView(MessageRedirectionMixin):
     template_name = 'home/add_kid.html'
     message = u'Kid has been added'
