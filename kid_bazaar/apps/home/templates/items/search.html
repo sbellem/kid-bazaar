@@ -19,6 +19,7 @@
                 <th>Category</th>
                 <th>Age</th>
                 <th>Price</th>
+                <th>Owner</th>
                 <th> </th>
             </tr>
         </thead>
@@ -39,6 +40,9 @@
             </td>
             <td>
                 {{ item.price }}
+            </td>
+            <td>
+                {{ item.owner.parent.email }}
             </td>
             <td>
                 <a href="/items/{{ item.id }}/bookit/" class="btn btn-default btn-sm" role="button">book it!</a>
