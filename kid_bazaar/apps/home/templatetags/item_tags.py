@@ -85,7 +85,7 @@ def item_status(context, item, user_viewing, asvar=None):
 
 @tag(register, [Variable(), Variable(), Optional([Constant("as"), Name()])])
 def kidowned(context, kid, item, asvar=None):
-    if kid.id == item.owner.id:
+    if kid and kid.id == item.owner.id:
         output = 'owned'
     else:
         output = 'not-owned'

@@ -108,8 +108,8 @@ class MyItemsView(ListView):
     active_filter = None
 
     filters = {
-        'owned': lambda i, my_kid: i.owner.id == my_kid.id,
-        'notowned': lambda i, my_kid: i.owner.id != my_kid.id,
+        'owned': lambda i, my_kid: i.owner.id == my_kid,
+        'notowned': lambda i, my_kid: i.owner.id != my_kid,
         'after': lambda i, my_kid: i.is_active() < 0,
         'now': lambda i, my_kid: i.is_active() == 0,
         'before': lambda i, my_kid: i.is_active() > 0,
@@ -137,21 +137,22 @@ class MyItemsView(ListView):
             item_ids.extend(models.Item.objects.filter(owner=self.my_kid).values_list('id', flat=True))
 
         all_items = models.Item.objects.prefetch_related('itemrequest_set').filter(id__in=set(item_ids))
+        my_kid_id = self.my_kid.id if self.my_kid else None
 
         self.counts = {
             'all': len(all_items),
-            'owned': len([i for i in all_items if self.filters['owned'](i, self.my_kid)]),
-            'notowned': len([i for i in all_items if self.filters['notowned'](i, self.my_kid)]),
-            'after': len([i for i in all_items if self.filters['after'](i, self.my_kid)]),
-            'now': len([i for i in all_items if self.filters['now'](i, self.my_kid)]),
-            'before': len([i for i in all_items if self.filters['before'](i, self.my_kid)]),
-            'booked': len([i for i in all_items if self.filters['booked'](i, self.my_kid)]),
-            'payment': len([i for i in all_items if self.filters['payment'](i, self.my_kid)]),
-            'requested': len([i for i in all_items if self.filters['requested'](i, self.my_kid)]),
-            'free': len([i for i in all_items if self.filters['free'](i, self.my_kid)]),
+            'owned': len([i for i in all_items if self.filters['owned'](i, my_kid_id)]),
+            'notowned': len([i for i in all_items if self.filters['notowned'](i, my_kid_id)]),
+            'after': len([i for i in all_items if self.filters['after'](i, my_kid_id)]),
+            'now': len([i for i in all_items if self.filters['now'](i, my_kid_id)]),
+            'before': len([i for i in all_items if self.filters['before'](i, my_kid_id)]),
+            'booked': len([i for i in all_items if self.filters['booked'](i, my_kid_id)]),
+            'payment': len([i for i in all_items if self.filters['payment'](i, my_kid_id)]),
+            'requested': len([i for i in all_items if self.filters['requested'](i, my_kid_id)]),
+            'free': len([i for i in all_items if self.filters['free'](i, my_kid_id)]),
         }
         if self.active_filter:
-            items = [i for i in all_items if self.filters[self.active_filter](i, self.my_kid)]
+            items = [i for i in all_items if self.filters[self.active_filter](i, my_kid_id)]
         else:
             items = all_items
         return sorted(items, key=lambda i: (-i.is_active(), i.age_from))
