@@ -62,8 +62,10 @@ class Item(models.Model):
                 ir.status = 'ACCEPTED'
                 ir.save()
 
-    def is_active(self):
-        kids_age = self.owner.age()
+    def is_active(self, kid=None):
+        if not kid:
+            kid = self.owner
+        kids_age = kid.age()
         item_age_from = self.age_from
         item_age_to = self.age_to
 
@@ -74,13 +76,50 @@ class Item(models.Model):
         else:
             return 1
 
+    def status(self):
+        oldest_status = self.get_oldest_status_itemrequest()
+        if oldest_status:
+            return oldest_status.status
+        else:
+            return 'FREE'
+
+    def accepted_itemrequest(self):
+        output = [ir for ir in self.itemrequest_set.all() if ir.status == 'ACCEPTED']
+        if output:
+            return output[0]
+        return None
+
+    def booked_from(self):
+        itemrequest = self.accepted_itemrequest()
+        if itemrequest:
+            return itemrequest.owner
+
+    def booked_for(self):
+        itemrequest = self.accepted_itemrequest()
+        if itemrequest:
+            return itemrequest.requesting_user
+
+    def get_oldest_status_itemrequest(self):
+        accepted = [i for i in self.itemrequest_set.all() if i.status == 'ACCEPTED']
+        if accepted:
+            return accepted[0]
+        pending_payments = [i for i in self.itemrequest_set.all() if i.status == 'PENDING_PAYMENT']
+        if pending_payments:
+            return pending_payments[0]
+        pending_confirmation = [i for i in self.itemrequest_set.all() if i.status == 'PENDING_CONFIRMATION']
+        if pending_confirmation:
+            return pending_confirmation[0]
+
+    def get_itemrequests(self, status):
+        return [i for i in self.itemrequest_set.all() if i.status == status]
+
 
 class ItemRequest(models.Model):
     item = models.ForeignKey(Item)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='items_sold')
     requesting_user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='items_wanted')
-    # can be PENDING_CONFIRMATION -> PENDING_PAYMENT (if price > 0) -> ACCEPTED 
-    status = models.TextField(default='PENDING_CONFIRMATION')  
+    # can be PENDING_CONFIRMATION -> PENDING_PAYMENT (if price > 0) -> ACCEPTED
+    status = models.TextField(default='PENDING_CONFIRMATION')
 
 
 class KBUser(AbstractEmailUser):

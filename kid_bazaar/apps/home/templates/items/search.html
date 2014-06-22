@@ -19,6 +19,7 @@
                 <th>Category</th>
                 <th>Age</th>
                 <th>Price</th>
+                <th> </th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +41,7 @@
                 {{ item.price }}
             </td>
             <td>
-                <a href="/items/{{ item.id }}/bookit/">book it!</a>
+                <a href="/items/{{ item.id }}/bookit/" class="btn btn-default btn-sm" role="button">book it!</a>
             </td>
         </tr>
     {% endfor %}

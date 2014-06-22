@@ -5,32 +5,32 @@
 {% block body %}
     <h1>My items</h1>
 
-    <table class="table " id="mine_items">
+    <table class="table table-fixed-header " id="mine_items">
         <thead>
             <tr>
-                <th>{% if my_kid %} {{ my_kid.name }} ({{ my_kid.age|age_text }}) {% endif %}</th>
                 <th>Picture</th>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Age</th>
                 <th>Price</th>
                 <th>Status</th>
+                <th>{% if my_kid %} {{ my_kid.name }} ({{ my_kid.age|age_text }}) {% endif %}</th>
             </tr>
         </thead>
         <tbody>
-    {% for item in object_list %}
-        <tr class="{% kiditemactive item %}">
-            <td class="kid-timeline">
-                <!--
-                {% if item.is_active < 0 %}
-                    <div class="progress-bar progress-bar-default" style="width: 70%;"></div>
-                {% elif item.is_active > 0 %}
-                    <div class="progress-bar progress-bar-warning" style="width: 70%;"></div>
-                {% else %}
-                    <div class="progress-bar progress-bar-success" style="width: 70%;"></div>
-                {% endif %}
-                -->
+
+    {% if not object_list %}
+        <tr>
+            <td colspan="7">
+                <p class="text-center"><i>You have no items!</i></p>
             </td>
+        </tr>
+    {% endif %}
+
+    {% for item in object_list %}
+        {% kiditemactive item my_kid as itemactive %}
+        {% kidowned my_kid item as owned %}
+        <tr class="{{ itemactive }} {{ owned }} status-{{ item.status }}">
             <td>
                 <img src="{% cloudinary_url item.pic width=100 height=100 crop="fill" %}" class="thumbnail" />
             </td>
@@ -46,9 +46,10 @@
             <td>
                 {{ item.price }}
             </td>
-            <td>
+            <td class="text-center">
                 {% item_status item user %}
             </td>
+            <td class="kid-timeline"></td>
         </tr>
     {% endfor %}
         </tbody>

@@ -676,7 +676,7 @@ html, body {
 }
 
 .nav > li > a {
-    padding: 10px 12px;
+    padding: 10px 10px;
 }
 
 .nav {
@@ -700,4 +700,21 @@ html, body {
 }
 #mine_items .after .kid-timeline{
     background: url('../img/timeline_past.png') repeat-y 50%;
+}
+
+#mine_items tr.not-owned {
+    color: rgb(182, 182, 182);
+}
+
+#mine_items .status-ACCEPTED .label {
+    background-color: #5cb85c;
+}
+#mine_items .status-PENDING_PAYMENT .label {
+    background-color: #f0ad4e;
+}
+#mine_items .status-PENDING_CONFIRMATION .label {
+    background-color: #d9534f;
+}
+#mine_items .status-PENDING_CONFIRMATION .label {
+    cursor: default;
 }

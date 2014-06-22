@@ -118,11 +118,10 @@ class MyItemsView(ListView):
         item_ids = list(models.ItemRequest.objects.filter(
             status__in=['PENDING_PAYMENT', 'ACCEPTED']).values_list('item__id', flat=True))
 
-        my_kid = self.request.user.kid_set.first()
-        if my_kid:
-            item_ids.extend(models.Item.objects.filter(owner=my_kid).values_list('id', flat=True))
-        
-        items = models.Item.objects.filter(id__in=set(item_ids))
+        if self.my_kid:
+            item_ids.extend(models.Item.objects.filter(owner=self.my_kid).values_list('id', flat=True))
+
+        items = models.Item.objects.prefetch_related('itemrequest_set').filter(id__in=set(item_ids))
         return sorted(items, key=lambda i: (-i.is_active(), i.age_from))
 
 
