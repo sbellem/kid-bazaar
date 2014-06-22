@@ -13,6 +13,7 @@
                 <th>Name</th>
                 <th>Category</th>
                 <th>Age</th>
+                <th>Price</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -41,6 +42,9 @@
             </td>
             <td>
                 {{ item.age_from|age_text }} - {{ item.age_to|age_text }}
+            </td>
+            <td>
+                {{ item.price }}
             </td>
             <td>
                 {% item_status item user %}
