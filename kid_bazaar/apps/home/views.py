@@ -130,8 +130,10 @@ class MyItemsView(ListView):
         return super(MyItemsView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        item_ids = list(models.ItemRequest.objects.filter(
-            status__in=['PENDING_PAYMENT', 'ACCEPTED']).values_list('item__id', flat=True))
+        item_ids = []
+        if self.my_kid:
+            item_ids = list(models.ItemRequest.objects.filter(requesting_user=self.request.user).filter(
+                status__in=['PENDING_PAYMENT', 'ACCEPTED']).values_list('item__id', flat=True))
 
         if self.my_kid:
             item_ids.extend(models.Item.objects.filter(owner=self.my_kid).values_list('id', flat=True))
